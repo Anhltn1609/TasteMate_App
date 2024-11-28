@@ -45,7 +45,7 @@ class AppStyles {
   // text style
   static const TextStyle textRegular = TextStyle(
     fontWeight: FontWeight.w400,
-    fontSize: 14,
+    fontSize: 16,
     color: Colors.black,
   );
 
