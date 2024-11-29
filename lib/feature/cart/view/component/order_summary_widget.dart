@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tastemate_app/core/constants/language_constants.dart';
 
 class OrderSummary extends StatelessWidget {
   const OrderSummary({
@@ -13,38 +14,39 @@ class OrderSummary extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Thành tiền', style: TextStyle(fontSize: 16)),
-              Text('171,000đ', style: TextStyle(fontSize: 16)),
+              Text(translation(context).total_amount,
+                  style: const TextStyle(fontSize: 16)),
+              Spacer(),
+              const Text('171,000đ', style: TextStyle(fontSize: 16)),
             ],
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Phí giao hàng', style: TextStyle(fontSize: 16)),
-              Text('30,000đ', style: TextStyle(fontSize: 16)),
+              Text(translation(context).shipping_fee,
+                  style: const TextStyle(fontSize: 16)),
+              Spacer(),
+              const Text('30,000đ', style: TextStyle(fontSize: 16)),
             ],
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           GestureDetector(
             onTap: () {
               // Promo code functionality here
             },
             child: Row(
               children: [
-                Text('NHẬP MÃ KHUYẾN MẠI',
-                    style: TextStyle(color: Colors.green)),
                 Spacer(),
-                Icon(Icons.arrow_forward_ios, color: Colors.green, size: 16),
+                Text(translation(context).apply_discount_code,
+                    style: const TextStyle(color: Colors.green)),
               ],
             ),
           ),
           SizedBox(height: 16),
           TextField(
             decoration: InputDecoration(
-              hintText: 'Mô tả về địa chỉ nhận hàng hay các lưu ý cho đơn hàng',
+              hintText: translation(context).delivery_address_description,
               border: OutlineInputBorder(),
               contentPadding: EdgeInsets.all(12),
             ),

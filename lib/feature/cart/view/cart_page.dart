@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:tastemate_app/app.dart';
 import 'package:tastemate_app/core/constants/app_configs.dart';
 import 'package:tastemate_app/core/constants/app_styles.dart';
+import 'package:tastemate_app/core/constants/language_constants.dart';
 import 'package:tastemate_app/core/router/routers.dart';
 import 'package:tastemate_app/core/widgets/green_button_widget.dart';
 import 'package:tastemate_app/feature/cart/view/component/list_item_oder.dart';
 import 'package:tastemate_app/feature/cart/view/component/order_summary_widget.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CartPage extends StatelessWidget {
   const CartPage({super.key});
@@ -15,14 +16,15 @@ class CartPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Giỏ hàng',
-          style: AppStyles.textBold.copyWith(fontSize: 30),
+          AppLocalizations.of(context)!.cart,
+          style: const TextStyle(
+              fontWeight: FontWeight.w700, color: AppStyles.primaryColor),
         ),
         elevation: 0,
         actions: [
           GestureDetector(
             onTap: () {
-              Navigator.pushNamed(context, Routes.account);
+              Navigator.pushNamed(context, Routes.profile);
             },
             child: CircleAvatar(
               backgroundColor: Colors.grey[300],
@@ -61,11 +63,12 @@ class CartPage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text.rich(
+                        Text.rich(
                           TextSpan(
                             children: [
                               TextSpan(
-                                text: 'Thêm ',
+                                text: AppLocalizations.of(context)!
+                                    .free_shipping_message_part1,
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 16,
@@ -80,18 +83,11 @@ class CartPage extends StatelessWidget {
                                 ),
                               ),
                               TextSpan(
-                                text: ' để được ',
+                                text: AppLocalizations.of(context)!
+                                    .free_shipping_message_part2,
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 16,
-                                ),
-                              ),
-                              TextSpan(
-                                text: 'Hỗ trợ giao hàng',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ],
@@ -123,7 +119,7 @@ class CartPage extends StatelessWidget {
               onPressed: () {
                 // Todo: Navigate to Payment
               },
-              title: 'Đặt hàng',
+              title: translation(context).place_order,
               isDisabled: false,
             ),
           ],

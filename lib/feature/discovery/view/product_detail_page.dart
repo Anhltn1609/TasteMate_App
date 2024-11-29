@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tastemate_app/core/constants/app_configs.dart';
+import 'package:tastemate_app/core/constants/app_styles.dart';
+import 'package:tastemate_app/core/constants/language_constants.dart';
 import 'package:tastemate_app/feature/cart/model/product.dart';
 
 class ProductDetailPage extends StatefulWidget {
@@ -59,7 +61,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Product Detail'),
+        title: Text(
+          translation(context).product_detail,
+          style: const TextStyle(
+              fontWeight: FontWeight.w700, color: AppStyles.primaryColor),
+        ),
         backgroundColor: Colors.white,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black),
