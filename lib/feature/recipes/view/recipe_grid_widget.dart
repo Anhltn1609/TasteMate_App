@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tastemate_app/core/constants/app_configs.dart';
 import 'package:tastemate_app/core/constants/app_styles.dart';
+import 'package:tastemate_app/core/constants/language_constants.dart';
 import 'package:tastemate_app/core/router/routers.dart';
 import 'package:tastemate_app/feature/recipes/model/recipe.dart';
 
@@ -58,17 +59,17 @@ class RecipeListView extends StatelessWidget {
         children: [
           const SearchBar(),
           RecipeGrid(
-            title: 'What\'s hot ',
+            title: translation(context).whats_hot,
             recipes: listRecipe.sublist(0, 8),
             childAspectRatio: 0.9,
           ),
           RecipeGrid(
-            title: 'Morning',
+            title: translation(context).morning,
             recipes: listRecipe.sublist(0, 8),
             childAspectRatio: 1.35,
           ),
           RecipeGrid(
-            title: 'Lunch',
+            title: translation(context).lunch,
             recipes: listRecipe.sublist(0, 8),
             childAspectRatio: 1.35,
           ),
@@ -176,7 +177,7 @@ class SearchBar extends StatelessWidget {
           Expanded(
             child: TextField(
               decoration: InputDecoration(
-                hintText: 'Find recipes',
+                hintText: translation(context).find_recipes,
                 prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
@@ -184,11 +185,17 @@ class SearchBar extends StatelessWidget {
                 ),
                 fillColor: Colors.grey[200],
                 filled: true,
+                contentPadding: const EdgeInsets.symmetric(vertical: 8.0),
               ),
             ),
           ),
+          const SizedBox(width: 16),
+          const Icon(
+            Icons.filter_list,
+            color: Colors.green,
+            size: 24,
+          ),
           const SizedBox(width: 8),
-          const Icon(Icons.filter_list, color: Colors.green),
         ],
       ),
     );
@@ -214,8 +221,8 @@ class SectionTitle extends StatelessWidget {
             onTap: () {
               //Todo : Navigate to SectionDetail
             },
-            child: const Text(
-              'see all',
+            child: Text(
+              translation(context).see_all,
               style: TextStyle(color: AppStyles.primaryColor, fontSize: 14),
             ),
           )

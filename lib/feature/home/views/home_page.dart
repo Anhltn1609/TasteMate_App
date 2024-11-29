@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tastemate_app/core/constants/app_styles.dart';
+import 'package:tastemate_app/core/constants/language_constants.dart';
 import 'package:tastemate_app/feature/cart/view/cart_page.dart';
 import 'package:tastemate_app/feature/dashboard/dashboard_page.dart';
 import 'package:tastemate_app/feature/discovery/view/discovery_page.dart';
@@ -74,28 +75,28 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               bottomAppBarItem(
-                title: 'Home',
+                title: translation(context).home,
                 icon: Icons.home,
                 index: 0,
               ),
               bottomAppBarItem(
                 index: 1,
-                title: 'Discovery',
+                title: translation(context).discovery,
                 icon: Icons.grid_view_rounded,
               ),
               bottomAppBarItem(
                 index: 2,
                 icon: Icons.add_circle_outlined,
-                title: ' ',
+                title: ' ', // Giữ trống nếu không có tiêu đề
               ),
               bottomAppBarItem(
                 index: 3,
-                title: 'Recipes',
+                title: translation(context).recipes,
                 icon: Icons.cookie,
               ),
               bottomAppBarItem(
                 index: 4,
-                title: 'cart',
+                title: translation(context).cart,
                 icon: Icons.shopping_cart,
               ),
             ],

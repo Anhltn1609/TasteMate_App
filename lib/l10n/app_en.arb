@@ -1,6 +1,59 @@
 {
   "helloWorld": "Hello World!",
-  "@helloWorld": {
-    "description": "The conventional newborn programmer greeting"
-  }
+  "profile": "Profile",
+
+  "age_information_profile": "{age} Tuổi",
+  "@age_information_profile": {
+    "placeholders" : {
+      "age" : {
+        "type" : "int"
+      }
+    }
+  },
+  "current_weight": "Current weight",
+  "goal": "Goal",
+
+  "profile_title_oder_setting": "Orders Setting",
+  "profile_title_personal_setting": "Personal Setting",
+  "profile_title_others_setting": "Others Setting",
+  "your_orders": "Your Orders",
+  "notifications": "Notifications",
+  "reward_program": "Reward Program",
+  "your_wallet": "Your Wallet",
+  "personal_details": "Personal Details",
+  "address": "Address",
+  "adjust_macronutrients": "Adjust Macronutrients",
+  "adjust_macronutrients_subtitle": "Carbs, fat, and protein",
+  "adjust_calories": "Adjust Calories",
+  "adjust_calories_subtitle": "1378 kcal/day",
+  "dietary_needs_preferences": "Dietary Needs & Preferences",
+  "water_habits": "Water Habits",
+  "settings": "Settings",
+  "help": "Help",
+  "free_shipping_message_part1": "Buy ",
+  "free_shipping_message_part2": " more to get free shipping",
+  "place_order": "Place Order",
+  "total_amount": "Total Amount",
+  "shipping_fee": "Shipping Fee",
+  "apply_discount_code": "Please apply an additional discount code",
+  "delivery_address_description": "Description of the delivery address or order notes",
+  "product_detail": "Product Detail",
+  "see_more": "(See more)",
+  "home": "Home",
+  "discovery": "Discovery",
+  "recipes": "Recipes",
+  "cart": "Cart",
+  "products": "Products",
+  "brands": "Brands",
+  "lifesum_standard": "LIFESUM STANDARD",
+  "see_all": "See all",
+  "whats_hot": "热门菜肴",
+  "morning": "早餐",
+  "lunch": "午餐",
+  "find_recipes": "Find amazing recipes"
+
+
+
+
+
 }

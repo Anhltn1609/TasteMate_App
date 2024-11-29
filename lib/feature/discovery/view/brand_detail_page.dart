@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tastemate_app/core/constants/app_configs.dart';
+import 'package:tastemate_app/core/constants/app_styles.dart';
+import 'package:tastemate_app/core/constants/language_constants.dart';
 import 'package:tastemate_app/feature/discovery/view/component/list_product_widget.dart';
 
 class BrandDetail extends StatelessWidget {
@@ -41,10 +43,10 @@ class BrandDetail extends StatelessWidget {
               textAlign: TextAlign.left,
             ),
             const SizedBox(height: 8),
-            const Text(
-              '(Xem thêm)',
+            Text(
+              translation(context).see_more,
               textAlign: TextAlign.left,
-              style: TextStyle(color: Colors.green),
+              style: const TextStyle(color: AppStyles.primaryColor),
             ),
             const ListProduct()
           ],
