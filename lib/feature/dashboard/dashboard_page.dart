@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:tastemate_app/core/constants/language_constants.dart';
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
@@ -8,7 +8,7 @@ class DashboardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Text(AppLocalizations.of(context)!.helloWorld),
+        child: Text(translation(context).helloWorld),
         // Text('This is dashboardPage'),
       ),
     );

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tastemate_app/app.dart';
 import 'package:tastemate_app/core/constants/app_configs.dart';
 import 'package:tastemate_app/core/constants/app_styles.dart';
+import 'package:tastemate_app/core/constants/language_constants.dart';
 import 'package:tastemate_app/core/router/routers.dart';
 import 'package:tastemate_app/feature/discovery/view/component/brand_tab_widget.dart';
 import 'package:tastemate_app/feature/discovery/view/component/product_tab_widget.dart';
@@ -16,14 +16,15 @@ class DiscoveryPage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            'Khám phá',
-            style: AppStyles.textBold.copyWith(fontSize: 30),
+            translation(context).discovery,
+            style: const TextStyle(
+                fontWeight: FontWeight.w700, color: AppStyles.primaryColor),
           ),
           elevation: 0,
           actions: [
             GestureDetector(
               onTap: () {
-                Navigator.pushNamed(context, Routes.account);
+                Navigator.pushNamed(context, Routes.profile);
               },
               child: CircleAvatar(
                 backgroundColor: Colors.grey[300],
@@ -43,10 +44,10 @@ class DiscoveryPage extends StatelessWidget {
             ),
             const SizedBox(width: 16),
           ],
-          bottom: const TabBar(
+          bottom: TabBar(
             tabs: [
-              Tab(text: 'Sản phẩm'),
-              Tab(text: 'Thương hiệu'),
+              Tab(text: translation(context).products),
+              Tab(text: translation(context).brands),
             ],
             indicatorColor: AppStyles.primaryColor,
             labelColor: Colors.black,

@@ -1,3 +1,58 @@
 {
-  "helloWorld": "你好!"
+  "helloWorld": "你好!",
+  "profile": "个人资料",
+
+  "age_information_profile": "{age} 岁",
+  "@age_information_profile": {
+    "placeholders" : {
+      "age" : {
+        "type" : "int"
+      }
+    }
+  },
+  "current_weight": "当前体重",
+  "goal": "目标",
+
+  "profile_title_oder_setting": "订单设置",
+  "profile_title_personal_setting": "个人设置",
+  "profile_title_others_setting": "其他设置",
+  "your_orders": "您的订单",
+  "notifications": "通知",
+  "reward_program": "奖励计划",
+  "your_wallet": "您的钱包",
+  "personal_details": "个人信息",
+  "address": "地址",
+  "adjust_macronutrients": "调整大营养素",
+  "adjust_macronutrients_subtitle": "碳水化合物、脂肪和蛋白质",
+  "adjust_calories": "调整卡路里",
+  "adjust_calories_subtitle": "1378 kcal/天",
+  "dietary_needs_preferences": "饮食需求和偏好",
+  "water_habits": "水的习惯",
+  "settings": "设置",
+  "help": "帮助",
+  "cart": "购物车",
+  "free_shipping_message_part1": "再购买 ",
+  "free_shipping_message_part2": " 即可享受免费配送",
+  "place_order": "下订单",
+  "total_amount": "总金额",
+  "shipping_fee": "运费",
+  "apply_discount_code": "请再使用折扣码",
+  "delivery_address_description": "关于收货地址或订单备注的描述",
+  "product_detail": "产品详情",
+  "see_more": "查看更多",
+  "home": "首页",
+  "discovery": "发现",
+  "recipes": "食谱",
+  "products": "产品",
+  "brands": "品牌",
+  "lifesum_standard": "LIFESUM STANDARD",
+  "see_all": "查看全部",
+  "whats_hot": "What’s hot",
+  "morning": "Morning",
+  "lunch": "Lunch",
+  "find_recipes": "查找精彩的食谱"
+
+
+
+
 }

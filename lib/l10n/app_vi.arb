@@ -1,3 +1,59 @@
 {
-  "helloWorld": "Xin Chào !"
+  "helloWorld": "Xin Chào !",
+  "profile": "Hồ sơ",
+
+  "age_information_profile": " years",
+  "@age_information_profile": {
+    "placeholders" : {
+      "age" : {
+        "type" : "int"
+      }
+    }
+  },
+
+  "current_weight": "Cân nặng hiện tại",
+  "goal" : "Mục tiêu ",
+
+  "profile_title_oder_setting": "Cài đặt đơn hàng",
+  "profile_title_personal_setting": "Cài đặt cá nhân",
+  "profile_title_others_setting": "Cài đặt khác",
+  "your_orders": "Đơn hàng của bạn",
+  "notifications": "Thông báo",
+  "reward_program": "Chương trình thưởng",
+  "your_wallet": "Ví của bạn",
+  "personal_details": "Thông tin cá nhân",
+  "address": "Địa chỉ",
+  "adjust_macronutrients": "Điều chỉnh các chất dinh dưỡng vĩ mô",
+  "adjust_macronutrients_subtitle": "Carbs, chất béo và protein",
+  "adjust_calories": "Điều chỉnh lượng calo",
+  "adjust_calories_subtitle": "1378 kcal/ngày",
+  "dietary_needs_preferences": "Nhu cầu và sở thích ăn uống",
+  "water_habits": "Thói quen uống nước",
+  "settings": "Cài đặt",
+  "help": "Trợ giúp",
+  "cart": "Giỏ hàng",
+  "free_shipping_message_part1": "Mua ",
+  "free_shipping_message_part2": " nữa để được miễn phí giao hàng",
+  "place_order": "Đặt hàng",
+  "total_amount": "Thành tiền",
+  "shipping_fee": "Phí giao hàng",
+  "apply_discount_code": "Bạn hãy áp thêm mã giảm giá",
+  "delivery_address_description": "Mô tả về địa chỉ nhận hàng hay các lưu ý cho đơn hàng",
+  "home": "Trang chủ",
+  "discovery": "Khám phá",
+  "recipes": "Công thức",
+  "product_detail": "Chi tiết sản phẩm",
+  "see_more": "(Xem thêm)",
+  "products": "Sản phẩm",
+  "brands": "Thương hiệu",
+  "lifesum_standard": "LIFESUM STANDARD",
+  "see_all": "Xem tất cả",
+  "whats_hot": "Món ăn phổ biến",
+  "morning": "Bữa sáng",
+  "lunch": "Bữa trưa",
+  "find_recipes": "Tìm kiếm những công thức ăn ngon"
+
+
+
+
 }
