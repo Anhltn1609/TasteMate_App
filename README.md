@@ -1,2 +1,16 @@
-# TasteMate_App
-Project aims to develop a food ordering and menu-planning app that allows users to browse local restaurant menus, customize their choices based on dietary preferences, and place orders with integrated payment. It simplifies meal selection, tracks dietary needs, and manages orders for a smoother food ordering experience.
+# tastemate_app
+
+A new Flutter project.
+
+## Getting Started
+
+This project is a starting point for a Flutter application.
+
+A few resources to get you started if this is your first Flutter project:
+
+- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+
+For help getting started with Flutter development, view the
+[online documentation](https://docs.flutter.dev/), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.
