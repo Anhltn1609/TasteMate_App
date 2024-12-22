@@ -3,6 +3,7 @@ import 'package:tastemate_app/core/constants/app_configs.dart';
 import 'package:tastemate_app/core/constants/app_styles.dart';
 import 'package:tastemate_app/core/constants/language_constants.dart';
 import 'package:tastemate_app/core/router/routers.dart';
+import 'package:tastemate_app/core/services/api/api_services.dart';
 import 'package:tastemate_app/core/widgets/green_button_widget.dart';
 import 'package:tastemate_app/feature/cart/view/component/list_item_oder.dart';
 import 'package:tastemate_app/feature/cart/view/component/order_summary_widget.dart';
@@ -30,7 +31,7 @@ class CartPage extends StatelessWidget {
               backgroundColor: Colors.grey[300],
               child: ClipOval(
                 child: Image.network(
-                  AppConfigs.fakeUrl,
+                  ApiService.user.avatar ?? AppConfigs.fakeUrl,
                   fit: BoxFit.cover,
                   width: 60,
                   height: 60,

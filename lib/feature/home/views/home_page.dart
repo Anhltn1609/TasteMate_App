@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tastemate_app/core/constants/app_styles.dart';
 import 'package:tastemate_app/core/constants/language_constants.dart';
+import 'package:tastemate_app/core/router/routers.dart';
+import 'package:tastemate_app/feature/authenication/bloc/auth_bloc.dart';
+import 'package:tastemate_app/feature/authenication/bloc/auth_event.dart';
+import 'package:tastemate_app/feature/authenication/bloc/auth_state.dart';
 import 'package:tastemate_app/feature/cart/view/cart_page.dart';
 import 'package:tastemate_app/feature/dashboard/dashboard_page.dart';
 import 'package:tastemate_app/feature/discovery/view/discovery_page.dart';
-import 'package:tastemate_app/feature/recipes/view/recipes_page.dart';
+import 'package:tastemate_app/feature/dish/view/recipes_page.dart';
+import 'package:tastemate_app/feature/nutrition_history/nutrition_history.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,22 +21,12 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
-  final List<Widget> _pages = const <Widget>[
+  final List<Widget> _pages = <Widget>[
     DashboardPage(),
-    DiscoveryPage(),
-    Center(
-      child: Text(
-        'Chức năng chưa được cập nhật ',
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: 30,
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    ),
-    RecipesPage(),
-    CartPage(),
+    const DiscoveryPage(),
+    NutritionHistoryPage(),
+    const RecipesPage(),
+    const CartPage(),
   ];
 
   Future<bool> _onWillPop() async {
@@ -46,7 +42,10 @@ class _HomePageState extends State<HomePage> {
                 child: const Text('Không'),
               ),
               TextButton(
-                onPressed: () => Navigator.of(context).pop(true),
+                onPressed: () {
+                  context.read<AuthBloc>().add(AuthLogout());
+                  // Navigator.of(context).pop(true);
+                },
                 child: const Text('Có'),
               ),
             ],
@@ -66,7 +65,14 @@ class _HomePageState extends State<HomePage> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-        body: _pages.elementAt(_selectedIndex),
+        body: BlocListener<AuthBloc, AuthState>(
+          listener: (context, state) {
+            if (state is AuthInitial) {
+              Navigator.pushReplacementNamed(context, Routes.login);
+            }
+          },
+          child: _pages.elementAt(_selectedIndex),
+        ),
         bottomNavigationBar: BottomAppBar(
           height: 76,
           shape: const CircularNotchedRectangle(),
@@ -87,7 +93,7 @@ class _HomePageState extends State<HomePage> {
               bottomAppBarItem(
                 index: 2,
                 icon: Icons.add_circle_outlined,
-                title: ' ', // Giữ trống nếu không có tiêu đề
+                title: ' ',
               ),
               bottomAppBarItem(
                 index: 3,

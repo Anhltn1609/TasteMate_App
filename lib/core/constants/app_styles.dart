@@ -6,6 +6,7 @@ class AppStyles {
 
   // color
   static const primaryColor = Color(0xFF4CBA5B);
+  static const bgLogo = Color(0xFFe0c2a6);
   static final secondaryColor = Colors.grey[700];
   static const bgDarkModeColor = Colors.black;
   static const bgLightModeColor = Color(0xffF6F6F6);

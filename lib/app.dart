@@ -42,7 +42,7 @@ class _AppState extends State<App> {
       navigatorKey: AppKeys.navigatorKey,
       scaffoldMessengerKey: AppKeys.snackBarKey,
       routes: Routes.routes,
-      initialRoute: Routes.home,
+      initialRoute: Routes.login,
       themeMode: ThemeMode.system,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: AppStyles.primaryColor),

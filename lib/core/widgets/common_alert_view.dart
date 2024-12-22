@@ -14,10 +14,8 @@ class CommonAlertView extends StatelessWidget {
     var errMsg = 'Something went wrong, please try again later!';
 
     if (exception is ApiException) {
-      // Customize error message by type if need
       errMsg = (exception as ApiException).error.message ?? errMsg;
     } else {
-      // Maybe push it in crashlytics service like Firbase, Datadog, etc
       if (kDebugMode) {
         errMsg = exception.toString();
       }
