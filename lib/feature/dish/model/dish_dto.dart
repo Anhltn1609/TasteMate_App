@@ -16,12 +16,19 @@ class DishDTO {
   });
 
   factory DishDTO.fromJson(Map<String, dynamic> json) {
+    final int n;
+    if (json['nutritionalValue'] is double) {
+      n = (json['nutritionalValue'] as double).round();
+    } else {
+      n = int.tryParse(json['nutritionalValue'].toString()) ?? 0;
+    }
+
     return DishDTO(
       id: json['_id'] as String,
       name: json['name'] as String,
       image: json['image'] as String,
       recipe: json['recipe'] as String,
-      nutritionalValue: json['nutritionalValue'] as int,
+      nutritionalValue: n ,
       description: json['description'] as String,
     );
   }

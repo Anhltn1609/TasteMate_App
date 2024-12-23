@@ -8,6 +8,7 @@ class IngredientBloc extends Bloc<IngredientEvent, IngredientState> {
 
   IngredientBloc(this._apiService) : super(IngredientLoading()) {
     on<LoadCategoryDetailEvent>(_onLoadCategoryDetailEvent);
+    on<LoadSupplierIngredientEvent>(_onLoadSupplierIngredientEvent);
   }
 
   Future<void> _onLoadCategoryDetailEvent(
@@ -23,6 +24,25 @@ class IngredientBloc extends Bloc<IngredientEvent, IngredientState> {
       } else {
         emit(IngredientFailure(
             "No Ingredient found for category ID: ${event.categoryId}."));
+      }
+    } catch (e) {
+      emit(IngredientFailure("Error loading category Ingredient: $e"));
+    }
+  }
+
+  Future<void> _onLoadSupplierIngredientEvent(
+    LoadSupplierIngredientEvent event,
+    Emitter<IngredientState> emit,
+  ) async {
+    emit(IngredientLoading());
+    try {
+      final supplierDetail =
+          await _apiService.getIngredientBySupplierId(event.supplierId);
+      if (supplierDetail != null && supplierDetail.isNotEmpty) {
+        emit(CategoryDetailLoaded(supplierDetail));
+      } else {
+        emit(IngredientFailure(
+            "No Ingredient found for category ID: ${event.supplierId}."));
       }
     } catch (e) {
       emit(IngredientFailure("Error loading category Ingredient: $e"));

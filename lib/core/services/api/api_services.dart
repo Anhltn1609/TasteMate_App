@@ -13,6 +13,7 @@ import 'package:tastemate_app/feature/discovery/model/ingredient_dto.dart';
 import 'package:tastemate_app/feature/discovery/model/supplier_dto.dart';
 import 'package:tastemate_app/feature/dish/model/dish_dto.dart';
 import 'package:tastemate_app/feature/dish/dish_detail/model/dish_recipe_dto.dart';
+import 'package:tastemate_app/feature/profile/model/address_dto.dart';
 import 'package:tastemate_app/feature/profile/model/user_update_dto.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 
@@ -323,7 +324,7 @@ class ApiService {
     try {
       var headers = {'Authorization': 'Bearer $accessToken'};
       var response = await _dio.request(
-        '$baseUrl/api/v1/suppliers?limit=10&page=$page&sortBy=name:desc',
+        '$baseUrl/api/v1/suppliers?limit=30&page=$page&sortBy=name:desc',
         options: Options(
           method: 'GET',
           headers: headers,
@@ -355,7 +356,7 @@ class ApiService {
     try {
       var headers = {'Authorization': 'Bearer $accessToken'};
       var response = await _dio.request(
-        '$baseUrl/api/v1/ingredients?limit=10&page=1&sortBy=name:desc',
+        '$baseUrl/api/v1/ingredients?limit=30&page=1&sortBy=name:desc',
         options: Options(
           method: 'GET',
           headers: headers,
@@ -461,6 +462,135 @@ class ApiService {
 
       if (response.statusCode == 200) {
         print(json.encode(response.data));
+        final responseData = response.data as Map<String, dynamic>;
+        if (responseData['data'] != null) {
+          final List<IngredientDTO> ingredientDTOs =
+              IngredientDTO.listFromJson(responseData['data']['ingredients']);
+          return ingredientDTOs;
+        }
+      } else {
+        print(response.statusMessage);
+      }
+    } on DioException catch (e) {
+      print(e.message);
+      print(e.toString());
+      rethrow;
+    }
+    return null;
+  }
+
+  Future<IngredientDTO?> getIngredientById(String ingredientId) async {
+    try {
+      var headers = {'Authorization': 'Bearer $accessToken'};
+      var dio = Dio();
+      var response = await dio.request(
+        '$baseUrl/api/v1/ingredients/$ingredientId',
+        options: Options(
+          method: 'GET',
+          headers: headers,
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        print(json.encode(response.data));
+        final responseData = response.data as Map<String, dynamic>;
+        if (responseData['data'] != null) {
+          final IngredientDTO ingredientDTO =
+              IngredientDTO.fromJson(responseData['data']['ingredient']);
+          return ingredientDTO;
+        }
+      } else {
+        print(response.statusMessage);
+      }
+    } on DioException catch (e) {
+      print(e.message);
+      print(e.toString());
+      rethrow;
+    }
+    return null;
+  }
+
+  Future<List<AddressDTO>?> getAddress() async {
+    try {
+      var headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken'
+      };
+      var dio = Dio();
+      var response = await dio.request(
+        '$baseUrl/api/v1/addresses',
+        options: Options(
+          method: 'GET',
+          headers: headers,
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        print(json.encode(response.data));
+        final responseData = response.data as Map<String, dynamic>;
+        if (responseData['data'] != null) {
+          final List<AddressDTO> addressDTO =
+              AddressDTO.listFromJson(responseData['data']['addresses']);
+          return addressDTO;
+        }
+      } else {}
+    } on DioException catch (e) {
+      rethrow;
+    }
+    return null;
+  }
+
+  Future<List<AddressDTO>?> updateAddress(AddressDTO address) async {
+    try {
+      var headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken'
+      };
+      var data = json.encode(address);
+      var response = await _dio.request(
+        '$baseUrl/api/v1/addresses/${address.id}',
+        options: Options(
+          method: 'PUT',
+          headers: headers,
+        ),
+        data: data,
+      );
+
+      if (response.statusCode == 200) {
+        print(json.encode(response.data));
+        final responseData = response.data as Map<String, dynamic>;
+        if (responseData['data'] != null) {
+          final List<AddressDTO> addressDTO =
+              AddressDTO.listFromJson(responseData['data']['addresses']);
+          return addressDTO;
+        }
+      } else {}
+    } on DioException catch (e) {
+      rethrow;
+    }
+    return null;
+  }
+
+  Future<List<IngredientDTO>?> getIngredientBySupplierId(
+      String supplierId) async {
+    try {
+      var headers = {'Authorization': 'Bearer $accessToken'};
+      var response = await _dio.request(
+        '$baseUrl/api/v1/ingredients/suppliers/$supplierId',
+        options: Options(
+          method: 'GET',
+          headers: headers,
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        print(json.encode(response.data));
+        final responseData = response.data as Map<String, dynamic>;
+        if (responseData['data'] != null) {
+          final List<IngredientDTO> ingredientDTOs =
+              IngredientDTO.listFromJson(responseData['data']['ingredients']);
+          return ingredientDTOs;
+        }
       } else {
         print(response.statusMessage);
       }

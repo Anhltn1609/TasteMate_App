@@ -7,10 +7,11 @@ import 'package:tastemate_app/feature/profile/bloc/profile_bloc.dart';
 import 'package:tastemate_app/feature/profile/bloc/profile_event.dart';
 import 'package:tastemate_app/feature/profile/bloc/profile_state.dart';
 import 'package:tastemate_app/core/services/api/api_services.dart';
+import 'package:tastemate_app/feature/profile/model/address_dto.dart';
 import 'package:tastemate_app/feature/profile/model/user_update_dto.dart';
 
 class UserInforPage extends StatefulWidget {
-  const UserInforPage({Key? key}) : super(key: key);
+  const UserInforPage({super.key});
 
   @override
   State<UserInforPage> createState() => _UserInforPageState();
@@ -20,13 +21,15 @@ class _UserInforPageState extends State<UserInforPage> {
   final TextEditingController _fullnameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   File? _selectedAvatar;
-
+  late AddressDTO address;
   @override
   void initState() {
     super.initState();
     final user = ApiService.user;
     _fullnameController.text = user.fullname;
     _phoneNumberController.text = user.phoneNumber;
+    final profileBloc = context.read<UserInforBloc>();
+    profileBloc.add(LoadUserInforEvent());
   }
 
   @override
@@ -45,7 +48,7 @@ class _UserInforPageState extends State<UserInforPage> {
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Không có ảnh nào được chọn')),
+        const SnackBar(content: Text('No image selected')),
       );
     }
   }
@@ -56,7 +59,7 @@ class _UserInforPageState extends State<UserInforPage> {
 
     if (fullname.isEmpty || phoneNumber.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Vui lòng nhập đầy đủ thông tin')),
+        const SnackBar(content: Text('Please fill out all fields')),
       );
       return;
     }
@@ -68,8 +71,86 @@ class _UserInforPageState extends State<UserInforPage> {
               fullname: fullname,
               phoneNumber: phoneNumber,
             ),
+            address: address,
           ),
         );
+  }
+
+  Widget _buildAddressWidget(AddressDTO address) {
+    final TextEditingController addressController =
+        TextEditingController(text: address.detailAddress);
+    final TextEditingController recipientController =
+        TextEditingController(text: address.recipientName);
+    final TextEditingController phoneController =
+        TextEditingController(text: address.phoneNumber);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Recipient Name',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        ),
+        const SizedBox(height: 8.0),
+        TextField(
+          controller: recipientController,
+          decoration: InputDecoration(
+            labelText: 'Recipient Name',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.0),
+            ),
+            prefixIcon: const Icon(Icons.person),
+          ),
+          onChanged: (value) {
+            setState(() {
+              recipientController.text = value;
+            });
+          },
+        ),
+        const SizedBox(height: 16.0),
+        const Text(
+          'Detail Address',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        ),
+        const SizedBox(height: 8.0),
+        TextField(
+          controller: addressController,
+          decoration: InputDecoration(
+            labelText: 'Address',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.0),
+            ),
+            prefixIcon: const Icon(Icons.location_on),
+          ),
+          onChanged: (value) {
+            setState(() {
+              addressController.text = value;
+            });
+          },
+        ),
+        const SizedBox(height: 16.0),
+        const Text(
+          'Phone',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        ),
+        const SizedBox(height: 8.0),
+        TextField(
+          controller: phoneController,
+          keyboardType: TextInputType.phone,
+          decoration: InputDecoration(
+            labelText: 'Phone Number',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.0),
+            ),
+            prefixIcon: const Icon(Icons.phone),
+          ),
+          onChanged: (value) {
+            setState(() {
+              phoneController.text = value;
+            });
+          },
+        ),
+      ],
+    );
   }
 
   @override
@@ -77,8 +158,8 @@ class _UserInforPageState extends State<UserInforPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Thông tin cá nhân',
-          style: const TextStyle(
+          'User Information',
+          style: TextStyle(
               fontWeight: FontWeight.w700, color: AppStyles.primaryColor),
         ),
       ),
@@ -90,12 +171,13 @@ class _UserInforPageState extends State<UserInforPage> {
             setState(() {
               _selectedAvatar = null;
             });
+            address = state.addressDTO;
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Cập nhật thành công!')),
+              const SnackBar(content: Text('Profile updated successfully!')),
             );
           } else if (state is UserInforFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Lỗi: ${state.error}')),
+              SnackBar(content: Text('Error: ${state.error}')),
             );
           }
         },
@@ -104,82 +186,92 @@ class _UserInforPageState extends State<UserInforPage> {
             return const Center(child: CircularProgressIndicator());
           }
 
-          final user = ApiService.user;
-
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  children: [
-                    Spacer(),
-                    GestureDetector(
-                      onTap: _pickImage,
-                      child: Stack(
-                        alignment: Alignment.bottomRight,
-                        children: [
-                          CircleAvatar(
-                            radius: 60,
-                            backgroundImage: _selectedAvatar != null
-                                ? FileImage(_selectedAvatar!)
-                                : NetworkImage(user.avatar!) as ImageProvider,
-                          ),
-                          const CircleAvatar(
-                            backgroundColor: AppStyles.primaryColor,
-                            radius: 18,
-                            child: Icon(Icons.edit, color: Colors.white),
-                          ),
-                        ],
+          if (state is UserInforLoaded) {
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Row(
+                    children: [
+                      const Spacer(),
+                      GestureDetector(
+                        onTap: _pickImage,
+                        child: Stack(
+                          alignment: Alignment.bottomRight,
+                          children: [
+                            CircleAvatar(
+                              radius: 60,
+                              backgroundImage: _selectedAvatar != null
+                                  ? FileImage(_selectedAvatar!)
+                                  : NetworkImage(state.user.avatar!)
+                                      as ImageProvider,
+                            ),
+                            const CircleAvatar(
+                              backgroundColor: AppStyles.primaryColor,
+                              radius: 18,
+                              child: Icon(Icons.edit, color: Colors.white),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Spacer(),
+                    ],
+                  ),
+                  const SizedBox(height: 24.0),
+                  TextField(
+                    controller: _fullnameController,
+                    decoration: InputDecoration(
+                      labelText: 'Full Name',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                      prefixIcon: const Icon(Icons.person),
+                    ),
+                  ),
+                  const SizedBox(height: 16.0),
+                  TextField(
+                    controller: _phoneNumberController,
+                    keyboardType: TextInputType.phone,
+                    decoration: InputDecoration(
+                      labelText: 'Phone Number',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                      prefixIcon: const Icon(Icons.phone),
+                    ),
+                  ),
+                  const SizedBox(height: 24.0),
+                  const Text(
+                    'Address',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 16.0),
+                  _buildAddressWidget(address),
+                  const SizedBox(height: 24.0),
+                  ElevatedButton(
+                    onPressed: _updateProfile,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppStyles.primaryColor,
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0),
                       ),
                     ),
-                    Spacer(),
-                  ],
-                ),
-                const SizedBox(height: 24.0),
-                TextField(
-                  controller: _fullnameController,
-                  decoration: InputDecoration(
-                    labelText: 'Họ và tên',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    prefixIcon: const Icon(Icons.person),
-                  ),
-                ),
-                const SizedBox(height: 16.0),
-                TextField(
-                  controller: _phoneNumberController,
-                  keyboardType: TextInputType.phone,
-                  decoration: InputDecoration(
-                    labelText: 'Số điện thoại',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    prefixIcon: const Icon(Icons.phone),
-                  ),
-                ),
-                const SizedBox(height: 24.0),
-                ElevatedButton(
-                  onPressed: _updateProfile,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppStyles.primaryColor,
-                    padding: const EdgeInsets.symmetric(vertical: 16.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.0),
+                    child: const Text(
+                      'Update Profile',
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
-                  child: const Text(
-                    'Cập nhật thông tin',
-                    style: TextStyle(
-                      fontSize: 18.0,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
+                ],
+              ),
+            );
+          }
+
+          return const Center(child: Text('No data available.'));
         },
       ),
     );

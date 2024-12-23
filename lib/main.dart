@@ -8,6 +8,7 @@ import 'package:tastemate_app/feature/discovery/bloc/discovery_bloc.dart';
 import 'package:tastemate_app/feature/dish/bloc/dish_bloc.dart';
 import 'package:tastemate_app/feature/dish/dish_detail/bloc/dish_detail_bloc.dart';
 import 'package:tastemate_app/feature/ingredient/bloc/ingredient_bloc.dart';
+import 'package:tastemate_app/feature/ingredient_detail/bloc/ingredient_detail_bloc.dart';
 import 'package:tastemate_app/feature/profile/bloc/profile_bloc.dart';
 
 void main() {
@@ -33,6 +34,9 @@ void main() {
         ),
         BlocProvider<RecipeBloc>(
           create: (context) => RecipeBloc(ApiService()),
+        ),
+        BlocProvider<IngredientDetailBloc>(
+          create: (context) => IngredientDetailBloc(ApiService()),
         ),
       ],
       child: const ProviderScope(

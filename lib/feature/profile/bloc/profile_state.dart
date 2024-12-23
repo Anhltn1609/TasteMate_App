@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:tastemate_app/feature/authenication/model/user_dto.dart';
+import 'package:tastemate_app/feature/profile/model/address_dto.dart';
 
 abstract class UserInforState extends Equatable {
   @override
@@ -15,11 +16,12 @@ class UserInforLoading extends UserInforState {}
 // Loaded state
 class UserInforLoaded extends UserInforState {
   final UserDTO user;
+  final AddressDTO addressDTO;
 
-  UserInforLoaded(this.user);
+  UserInforLoaded(this.user, this.addressDTO);
 
   @override
-  List<Object?> get props => [user];
+  List<Object?> get props => [user, addressDTO];
 }
 
 // Updating state

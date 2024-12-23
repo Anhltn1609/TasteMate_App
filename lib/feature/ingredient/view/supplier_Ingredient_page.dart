@@ -7,22 +7,24 @@ import 'package:tastemate_app/feature/ingredient/bloc/ingredient_bloc.dart';
 import 'package:tastemate_app/feature/ingredient/bloc/ingredient_event.dart';
 import 'package:tastemate_app/feature/ingredient/bloc/ingredient_state.dart';
 
-class CategoryDetailPage extends StatefulWidget {
-  final String categoryId;
+class SupplierIngredientPage extends StatefulWidget {
+  final String supplierId;
+  final String title;
 
-  const CategoryDetailPage({super.key, required this.categoryId});
+  const SupplierIngredientPage(
+      {super.key, required this.supplierId, required this.title});
 
   @override
-  _CategoryDetailPageState createState() => _CategoryDetailPageState();
+  _SupplierDetailPageState createState() => _SupplierDetailPageState();
 }
 
-class _CategoryDetailPageState extends State<CategoryDetailPage> {
+class _SupplierDetailPageState extends State<SupplierIngredientPage> {
   @override
   void initState() {
     super.initState();
     context
         .read<IngredientBloc>()
-        .add(LoadCategoryDetailEvent(widget.categoryId));
+        .add(LoadSupplierIngredientEvent(widget.supplierId));
   }
 
   @override
@@ -32,7 +34,7 @@ class _CategoryDetailPageState extends State<CategoryDetailPage> {
         backgroundColor: Colors.white,
         elevation: 0,
         title: Text(
-          "Category Details",
+          "Supplier ${widget.title} Details",
           style: TextStyle(
             fontSize: 20.0,
             fontWeight: FontWeight.bold,
@@ -62,7 +64,7 @@ class _CategoryDetailPageState extends State<CategoryDetailPage> {
               return const Center(child: CircularProgressIndicator());
             } else if (state is CategoryDetailLoaded) {
               return CategoryListWidget(
-                title: "Ingredients",
+                title: "Nguyên liệu",
                 ingredients: state.ingredients,
               );
             } else if (state is IngredientFailure) {

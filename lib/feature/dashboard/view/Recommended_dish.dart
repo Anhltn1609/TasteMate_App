@@ -60,9 +60,12 @@ class RecommendedMealSection extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
-              child: Image(
-                image: NetworkImage(AppConfigs.fakeUrl),
-                fit: BoxFit.cover,
+              child: SizedBox(
+                height: 100,
+                child: Image(
+                  image: NetworkImage(dish.image),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             SizedBox(height: 8),

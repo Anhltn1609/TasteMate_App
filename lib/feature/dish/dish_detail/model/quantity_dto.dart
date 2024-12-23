@@ -4,7 +4,7 @@ import 'package:tastemate_app/feature/dish/model/dish_dto.dart';
 class QuantityDTO {
   final String id;
   final IngredientDTO ingredient;
-  final int quantity;
+  final double quantity;
 
   QuantityDTO({
     required this.id,

@@ -18,8 +18,9 @@ class UserInforBloc extends Bloc<UserInforEvent, UserInforState> {
     emit(UserInforLoading());
     try {
       final user = ApiService.user;
-      if (user != null) {
-        emit(UserInforLoaded(user));
+      final address = await _apiService.getAddress();
+      if (address != null) {
+        emit(UserInforLoaded(user, address[0]));
       } else {
         emit(UserInforFailure("Failed to load user information."));
       }
@@ -35,8 +36,9 @@ class UserInforBloc extends Bloc<UserInforEvent, UserInforState> {
     emit(UserInforUpdating());
     try {
       final updatedUser = await _apiService.changeProfile(event.userUpdateDTO);
-      if (updatedUser != null) {
-        emit(UserInforLoaded(updatedUser));
+      final address = await _apiService.updateAddress(event.address);
+      if (address != null && updatedUser != null) {
+        emit(UserInforLoaded(updatedUser, address[0]));
       } else {
         emit(UserInforFailure("Failed to load user information."));
       }

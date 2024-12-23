@@ -9,6 +9,8 @@ import 'package:tastemate_app/feature/dish/dish_detail/view/recipe_detail_page.d
 import 'package:tastemate_app/feature/ingredient/view/category_detail_page.dart';
 import 'package:tastemate_app/feature/discovery/view/product_detail_page.dart';
 import 'package:tastemate_app/feature/home/views/home_page.dart';
+import 'package:tastemate_app/feature/ingredient/view/supplier_Ingredient_page.dart';
+import 'package:tastemate_app/feature/ingredient_detail/ingredient_detail_page.dart';
 import 'package:tastemate_app/feature/profile/view/profile_page.dart';
 import 'package:tastemate_app/feature/profile/view/user_infor_page.dart';
 
@@ -22,7 +24,9 @@ class Routes {
   static const dashboard = '/dashboard';
   static const profile = '/profile';
   static const productDetail = '/productDetail';
+  static const ingredientDetail = '/ingredientDetail';
   static const categoryDetail = '/categoryDetail';
+  static const supplierDetail = '/supplierDetail';
   static const dishDetail = '/dishDetail';
   static const userInfor = '/userInfor';
 
@@ -42,7 +46,15 @@ class Routes {
         email: ModalRoute.of(context)!.settings.arguments as String),
     categoryDetail: (context) => CategoryDetailPage(
         categoryId: ModalRoute.of(context)!.settings.arguments as String),
+    supplierDetail: (context) => SupplierIngredientPage(
+          supplierId: (ModalRoute.of(context)!.settings.arguments
+              as Map<String, String>)['id']!,
+          title: (ModalRoute.of(context)!.settings.arguments
+              as Map<String, String>)['name']!,
+        ),
     dishDetail: (context) => RecipeDetailPage(
         dishId: ModalRoute.of(context)!.settings.arguments as String),
+    ingredientDetail: (context) => IngredientDetailPage(
+        ingredientId: ModalRoute.of(context)!.settings.arguments as String),
   };
 }

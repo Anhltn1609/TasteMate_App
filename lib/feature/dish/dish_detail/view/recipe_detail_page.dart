@@ -1,6 +1,7 @@
 // recipe_detail_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tastemate_app/core/constants/app_configs.dart';
 import 'package:tastemate_app/core/constants/app_styles.dart';
 import 'package:tastemate_app/core/services/api/api_services.dart';
 import 'package:tastemate_app/feature/dish/dish_detail/bloc/dish_detail_bloc.dart';
@@ -62,6 +63,7 @@ class DishDetailView extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(10.0),
             child: Image.network(
+              // AppConfigs.fakeUrl,
               dish.dish.image,
               width: double.infinity,
               height: 200,
