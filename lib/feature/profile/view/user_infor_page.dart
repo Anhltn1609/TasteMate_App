@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tastemate_app/core/constants/app_styles.dart';
+import 'package:tastemate_app/core/widgets/dialog_widget.dart';
 import 'package:tastemate_app/feature/profile/bloc/profile_bloc.dart';
 import 'package:tastemate_app/feature/profile/bloc/profile_event.dart';
 import 'package:tastemate_app/feature/profile/bloc/profile_state.dart';
@@ -47,8 +48,13 @@ class _UserInforPageState extends State<UserInforPage> {
         _selectedAvatar = File(pickedFile.path);
       });
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No image selected')),
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return const CustomDialogWidget(
+            message: 'Không có bức ảnh nào được chọn',
+          );
+        },
       );
     }
   }
@@ -58,8 +64,13 @@ class _UserInforPageState extends State<UserInforPage> {
     final phoneNumber = _phoneNumberController.text.trim();
 
     if (fullname.isEmpty || phoneNumber.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill out all fields')),
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return const CustomDialogWidget(
+            message: 'Hãy điền toàn bộ các trường thông tin',
+          );
+        },
       );
       return;
     }
@@ -172,12 +183,18 @@ class _UserInforPageState extends State<UserInforPage> {
               _selectedAvatar = null;
             });
             address = state.addressDTO;
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Profile updated successfully!')),
-            );
           } else if (state is UserInforFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('Error: ${state.error}')),
+            );
+          } else if (state is UserInforUpdateSuccess) {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return const CustomDialogWidget(
+                  message: 'Cập nhật hồ sơ cá nhân thành công',
+                );
+              },
             );
           }
         },
@@ -185,7 +202,6 @@ class _UserInforPageState extends State<UserInforPage> {
           if (state is UserInforLoading) {
             return const Center(child: CircularProgressIndicator());
           }
-
           if (state is UserInforLoaded) {
             return SingleChildScrollView(
               padding: const EdgeInsets.all(24.0),

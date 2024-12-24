@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tastemate_app/core/router/routers.dart';
+import 'package:tastemate_app/core/widgets/dialog_widget.dart';
 import 'package:tastemate_app/feature/authenication/bloc/auth_bloc.dart';
 import 'package:tastemate_app/feature/authenication/bloc/auth_event.dart';
 import 'package:tastemate_app/feature/authenication/bloc/auth_state.dart';
@@ -22,8 +23,13 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
     final otp = _otpController.text.trim();
 
     if (otp.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Vui lòng nhập mã OTP')),
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return const CustomDialogWidget(
+            message: 'Vui lòng nhập mã OTP',
+          );
+        },
       );
       return;
     }
@@ -50,15 +56,26 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
             );
           } else if (state is OtpVerified) {
             Navigator.of(context).pop();
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Xác minh thành công')),
-            );
             Navigator.pushNamed(context, Routes.resetPassword,
                 arguments: widget.email);
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return CustomDialogWidget(
+                  message: 'Xác minh thành công',
+                );
+              },
+            );
           } else if (state is AuthFailure) {
             Navigator.of(context).pop();
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
+
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return CustomDialogWidget(
+                  message: state.message,
+                );
+              },
             );
           }
         },

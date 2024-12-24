@@ -10,6 +10,7 @@ import 'package:tastemate_app/feature/dish/bloc/dish_bloc.dart';
 import 'package:tastemate_app/feature/dish/dish_detail/bloc/dish_detail_bloc.dart';
 import 'package:tastemate_app/feature/ingredient/bloc/ingredient_bloc.dart';
 import 'package:tastemate_app/feature/ingredient_detail/bloc/ingredient_detail_bloc.dart';
+import 'package:tastemate_app/feature/nutrition_history/bloc/nutrition_bloc.dart';
 import 'package:tastemate_app/feature/order/bloc/order_bloc.dart';
 import 'package:tastemate_app/feature/profile/bloc/profile_bloc.dart';
 
@@ -45,6 +46,9 @@ void main() {
         ),
         BlocProvider<OrderBloc>(
           create: (context) => OrderBloc(ApiService()),
+        ),
+        BlocProvider<NutritionHistoryBloc>(
+          create: (context) => NutritionHistoryBloc(ApiService()),
         ),
       ],
       child: const ProviderScope(

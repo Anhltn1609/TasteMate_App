@@ -24,6 +24,16 @@ class UserInforLoaded extends UserInforState {
   List<Object?> get props => [user, addressDTO];
 }
 
+class UserInforUpdateSuccess extends UserInforState {
+  final UserDTO user;
+  final AddressDTO addressDTO;
+
+  UserInforUpdateSuccess(this.user, this.addressDTO);
+
+  @override
+  List<Object?> get props => [user, addressDTO];
+}
+
 // Updating state
 class UserInforUpdating extends UserInforState {}
 

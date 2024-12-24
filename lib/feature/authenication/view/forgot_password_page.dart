@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tastemate_app/core/router/routers.dart';
+import 'package:tastemate_app/core/widgets/dialog_widget.dart';
 import 'package:tastemate_app/feature/authenication/bloc/auth_bloc.dart';
 import 'package:tastemate_app/feature/authenication/bloc/auth_event.dart';
 import 'package:tastemate_app/feature/authenication/bloc/auth_state.dart';
@@ -20,15 +21,25 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
 
     if (email.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Vui lòng nhập email')),
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return CustomDialogWidget(
+            message: 'Email không hợp lệ',
+          );
+        },
       );
       return;
     }
 
     if (!emailRegex.hasMatch(email)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Email không hợp lệ')),
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return CustomDialogWidget(
+            message: 'Email không hợp lệ',
+          );
+        },
       );
       return;
     }
@@ -53,17 +64,27 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
               ),
             );
           } else if (state is AuthSuccessOtpSent) {
-            Navigator.of(context).pop(); // Close loading dialog
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                  content: Text('Mã OTP đã được gửi đến email của bạn')),
-            );
+            Navigator.of(context).pop();
             Navigator.pushNamed(context, Routes.verifyOtp,
                 arguments: _emailController.text);
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return CustomDialogWidget(
+                  message:
+                      'Mã OTP đã được gửi đến email của bạn, hãy kiểm tra email',
+                );
+              },
+            );
           } else if (state is AuthFailure) {
-            Navigator.of(context).pop(); // Close loading dialog
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
+            Navigator.of(context).pop();
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return CustomDialogWidget(
+                  message: state.message,
+                );
+              },
             );
           }
         },

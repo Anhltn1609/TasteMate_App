@@ -4,7 +4,7 @@ import 'package:tastemate_app/feature/dish/model/dish_dto.dart';
 class QuantityDTO {
   final String id;
   final IngredientDTO ingredient;
-  final double quantity;
+  final int quantity;
 
   QuantityDTO({
     required this.id,
@@ -14,10 +14,16 @@ class QuantityDTO {
 
   // Factory method to create an instance from JSON
   factory QuantityDTO.fromJson(Map<String, dynamic> json) {
+    final int n;
+    if (json['nutritionalValue'] is double) {
+      n = (json['nutritionalValue'] as double).round();
+    } else {
+      n = int.tryParse(json['nutritionalValue'].toString()) ?? 0;
+    }
     return QuantityDTO(
       id: json['_id'],
       ingredient: IngredientDTO.fromJson(json['ingredientInfo']),
-      quantity: json['quantity'],
+      quantity: n,
     );
   }
 

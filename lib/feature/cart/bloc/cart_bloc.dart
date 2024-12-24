@@ -23,10 +23,10 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       if (cart != null && ordersHistory != null) {
         emit(CartLoaded(cart: cart, orderHistoryDTOs: ordersHistory));
       } else {
-        emit(CartError("Lỗi tải cart"));
+        emit(CartError("Lỗi hệ thống hãy thử lại sau"));
       }
     } catch (e) {
-      emit(CartError(e.toString()));
+      emit(CartError("Lỗi hệ thống hãy thử lại sau"));
     }
   }
 
@@ -60,10 +60,10 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           orderHistoryDTOs: ordersHistory,
         ));
       } else {
-        emit(CartError("Lỗi tải cart"));
+        emit(CartError("Lỗi hệ thống hãy thử lại sau"));
       }
     } catch (e) {
-      emit(CartError(e.toString()));
+      emit(CartError("Lỗi hệ thống hãy thử lại sau"));
     }
   }
 
@@ -82,10 +82,10 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           orderHistoryDTOs: ordersHistory,
         ));
       } else {
-        emit(CartError("Lỗi tải cart"));
+        emit(CartError("Lỗi hệ thống hãy thử lại sau"));
       }
     } catch (e) {
-      emit(CartError(e.toString()));
+      emit(CartError("Lỗi hệ thống hãy thử lại sau"));
     }
   }
 
@@ -106,7 +106,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         emit(CartError("Lỗi tải cart"));
       }
     } catch (e) {
-      emit(CartError(e.toString()));
+      emit(CartError("Lỗi hệ thống hãy thử lại sau"));
     }
   }
 

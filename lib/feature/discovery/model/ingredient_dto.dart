@@ -33,10 +33,16 @@ class IngredientDTO {
 
   // Factory method to create an instance from JSON
   factory IngredientDTO.fromJson(Map<String, dynamic> json) {
+    final int n;
+    if (json['nutritionalValue'] is double) {
+      n = (json['nutritionalValue'] as double).round();
+    } else {
+      n = int.tryParse(json['nutritionalValue'].toString()) ?? 0;
+    }
     return IngredientDTO(
       id: json['_id'] as String,
       name: json['name'] as String,
-      nutritionalValue: json['nutritionalValue'] as int,
+      nutritionalValue: n,
       description: (json['description'] as String?) ?? "",
       image: (json['image'] as String?) ?? AppConfigs.fakeUrl,
       unit: json['unit'] as String,

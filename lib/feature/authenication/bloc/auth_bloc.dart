@@ -31,10 +31,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (user != null) {
         emit(AuthSuccess(user));
       } else {
-        emit(AuthFailure("Login failed. Please try again."));
+        emit(AuthFailure("Đăng nhập thất bại vui lòng thử lại"));
       }
     } catch (e) {
-      emit(AuthFailure("Error: $e"));
+      emit(AuthFailure("Lỗi hệ thống vui lòng thử lại sau"));
     }
   }
 
@@ -57,7 +57,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(AuthFailure("Account creation failed."));
       }
     } catch (e) {
-      emit(AuthFailure("Error: $e"));
+      emit(AuthFailure("Lỗi hệ thống vui lòng thử lại sau"));
     }
   }
 
@@ -74,7 +74,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(AuthFailure("Failed to send OTP. Please try again."));
       }
     } catch (e) {
-      emit(AuthFailure("Error: $e"));
+      emit(AuthFailure("Lỗi hệ thống hãy thử lại sau"));
     }
   }
 
@@ -92,7 +92,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             "OTP verification failed. Please check the OTP and try again."));
       }
     } catch (e) {
-      emit(AuthFailure("Error: $e"));
+      emit(AuthFailure("Lỗi hệ thống hãy thử lại sau"));
     }
   }
 
@@ -109,7 +109,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(AuthFailure("Password reset failed. Please try again."));
       }
     } catch (e) {
-      emit(AuthFailure("Error: $e"));
+      emit(AuthFailure("Lỗi hệ thống hãy thử lại sau"));
     }
   }
 

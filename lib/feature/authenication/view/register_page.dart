@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tastemate_app/core/router/routers.dart';
+import 'package:tastemate_app/core/widgets/dialog_widget.dart';
 import 'package:tastemate_app/feature/authenication/bloc/auth_bloc.dart';
 import 'package:tastemate_app/feature/authenication/bloc/auth_event.dart';
 import 'package:tastemate_app/feature/authenication/bloc/auth_state.dart';
@@ -28,39 +29,58 @@ class _RegisterPageState extends State<RegisterPage> {
     final confirmPassword = _confirmPasswordController.text.trim();
 
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    final passwordRegex = RegExp(
-        r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d!@#\$%\^&\*\(\)_\+\-=\[\]\{\};:\",<>\.\/\?\\|`~]{8,}$');
+    final passwordRegex =
+        RegExp(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d]{8,}$');
 
     if (email.isEmpty ||
         fullname.isEmpty ||
         phone.isEmpty ||
         password.isEmpty ||
         confirmPassword.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Vui lòng điền đầy đủ thông tin')),
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return const CustomDialogWidget(
+            message: 'Vui lòng điền đầy đủ thông tin',
+          );
+        },
       );
       return;
     }
 
     if (!emailRegex.hasMatch(email)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Email không hợp lệ')),
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return const CustomDialogWidget(
+            message: 'Email không hợp lệ',
+          );
+        },
       );
       return;
     }
 
     if (!passwordRegex.hasMatch(password)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text(
-                'Mật khẩu phải chứa ít nhất 8 ký tự, gồm 1 chữ hoa, 1 chữ thường và 1 số')),
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return const CustomDialogWidget(
+            message:
+                'Mật khẩu phải chứa ít nhất 8 ký tự, gồm: chữ in hoa, chữ in thường, chữ số',
+          );
+        },
       );
       return;
     }
 
     if (password != confirmPassword) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Mật khẩu không khớp')),
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return const CustomDialogWidget(
+            message: 'Mật khẩu không khớp',
+          );
+        },
       );
       return;
     }
@@ -87,13 +107,23 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
             );
           } else if (state is UserCreated) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Đăng ký thành công')),
-            );
             Navigator.pushNamed(context, Routes.login);
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return const CustomDialogWidget(
+                  message: 'Đăng ký thành công',
+                );
+              },
+            );
           } else if (state is AuthFailure) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return CustomDialogWidget(
+                  message: state.message,
+                );
+              },
             );
           }
         },

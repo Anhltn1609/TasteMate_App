@@ -14,6 +14,7 @@ import 'package:tastemate_app/feature/discovery/model/ingredient_dto.dart';
 import 'package:tastemate_app/feature/discovery/model/supplier_dto.dart';
 import 'package:tastemate_app/feature/dish/model/dish_dto.dart';
 import 'package:tastemate_app/feature/dish/dish_detail/model/dish_recipe_dto.dart';
+import 'package:tastemate_app/feature/nutrition_history/model/nutrition_history_dto.dart';
 import 'package:tastemate_app/feature/order/model/order_dto.dart';
 import 'package:tastemate_app/feature/order/model/order_history_dto.dart';
 import 'package:tastemate_app/feature/profile/model/address_dto.dart';
@@ -116,7 +117,6 @@ class ApiService {
         debugPrint(json.encode(response.data));
         final responseData = response.data as Map<String, dynamic>;
 
-        // Save token when login success
         if (responseData['data'] != null) {
           final String? token = responseData['data']['accessToken'];
           if (token != null) {
@@ -125,7 +125,6 @@ class ApiService {
             debugPrint("Access Token được lưu: $token");
           }
         }
-
         if (responseData['data'] != null &&
             responseData['data']['user'] != null) {
           final UserDTO userInfor =
@@ -136,6 +135,9 @@ class ApiService {
           debugPrint("login error : User data not found in response.");
           return null;
         }
+      } else if (response.statusCode == 400) {
+        debugPrint("login error : ${response.statusMessage}");
+        return null;
       } else {
         debugPrint("login error : ${response.statusMessage}");
         return null;
@@ -295,7 +297,7 @@ class ApiService {
     try {
       var headers = {'Authorization': 'Bearer $accessToken'};
       var response = await _dio.request(
-        '$baseUrl/api/v1/categories?limit=10&page=$page&sortBy=name:desc',
+        '$baseUrl/api/v1/categories?limit=20&page=$page&sortBy=name:desc',
         options: Options(
           method: 'GET',
           headers: headers,
@@ -391,7 +393,7 @@ class ApiService {
       var headers = {'Authorization': 'Bearer $accessToken'};
       var response = await _dio.request(
         // '$baseUrl/api/v1/ingredients?limit=10&page=1&sortBy=name:desc',
-        '$baseUrl/api/v1/dishes?limit=10&page=$page&sortBy=name:desc',
+        '$baseUrl/api/v1/dishes?limit=30&page=$page&sortBy=name:desc',
         options: Options(
           method: 'GET',
           headers: headers,
@@ -759,7 +761,6 @@ class ApiService {
     }
   }
 
-  //Todo đợi sửa api
   Future<List<OrderHistoryDTO>?> getAllOrders() async {
     try {
       var data = '''''';
@@ -768,7 +769,7 @@ class ApiService {
         'Authorization': 'Bearer $accessToken'
       };
       var response = await _dio.request(
-        '$baseUrl/api/v1/orders/me?limit=10&page=1',
+        '$baseUrl/api/v1/orders/me?limit=20&page=1',
         options: Options(
           method: 'GET',
           headers: headers,
@@ -790,6 +791,40 @@ class ApiService {
       }
     } on DioException catch (e) {
       // return false;
+      rethrow;
+    }
+  }
+
+  Future<List<NutritionHistoryDTO>?> getNutritionHistory() async {
+    try {
+      var headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken'
+      };
+      var response = await _dio.request(
+        '$baseUrl/api/v1/nutrition-history/user/${user.id}?limit=10&page=1&sortBy=recordedAt:desc',
+        options: Options(
+          method: 'GET',
+          headers: headers,
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        print(json.encode(response.data));
+        final responseData = response.data as Map<String, dynamic>;
+        if (responseData['data'] != null) {
+          final List<NutritionHistoryDTO> nutritionHistoryDTO =
+              NutritionHistoryDTO.listFromJson(
+                  responseData['data']['nutritionHistory']);
+          return nutritionHistoryDTO;
+        } else {
+          print(response.statusMessage);
+          return null;
+        }
+      }
+    } on DioException catch (e) {
+      // return false;
+      print(e);
       rethrow;
     }
   }

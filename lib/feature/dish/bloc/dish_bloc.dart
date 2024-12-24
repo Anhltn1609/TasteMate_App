@@ -25,7 +25,7 @@ class RecipeBloc extends Bloc<RecipeEvent, RecipeState> {
         emit(RecipeError("No ingredients found."));
       }
     } catch (e) {
-      emit(RecipeError("Failed to load recipes: $e"));
+      emit(RecipeError("Lỗi hệ thống hãy thử lại sau"));
     }
   }
 }

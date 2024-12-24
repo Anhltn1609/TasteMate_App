@@ -26,7 +26,7 @@ class IngredientBloc extends Bloc<IngredientEvent, IngredientState> {
             "No Ingredient found for category ID: ${event.categoryId}."));
       }
     } catch (e) {
-      emit(IngredientFailure("Error loading category Ingredient: $e"));
+      emit(IngredientFailure("Lỗi hệ thống hãy thử lại sau"));
     }
   }
 
@@ -45,7 +45,7 @@ class IngredientBloc extends Bloc<IngredientEvent, IngredientState> {
             "No Ingredient found for category ID: ${event.supplierId}."));
       }
     } catch (e) {
-      emit(IngredientFailure("Error loading category Ingredient: $e"));
+      emit(IngredientFailure("Lỗi hệ thống hãy thử lại sau"));
     }
   }
 }

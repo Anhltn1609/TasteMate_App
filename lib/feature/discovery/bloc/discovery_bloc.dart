@@ -24,7 +24,7 @@ class DiscoveryBloc extends Bloc<DiscoveryEvent, DiscoveryState> {
         emit(DiscoveryFailure("No ingredients found."));
       }
     } catch (e) {
-      emit(DiscoveryFailure("Error loading ingredients: $e"));
+      emit(DiscoveryFailure("Lỗi hệ thống hãy thử lại sau"));
     }
   }
 
@@ -44,7 +44,7 @@ class DiscoveryBloc extends Bloc<DiscoveryEvent, DiscoveryState> {
         emit(DiscoveryFailure("No Category found."));
       }
     } catch (e) {
-      emit(DiscoveryFailure("Error loading Category: $e"));
+      emit(DiscoveryFailure("Lỗi hệ thống hãy thử lại sau"));
     }
   }
 }

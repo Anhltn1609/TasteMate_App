@@ -9,7 +9,6 @@ import 'package:tastemate_app/feature/dashboard/dashboard_page.dart';
 import 'package:tastemate_app/feature/discovery/view/discovery_page.dart';
 import 'package:tastemate_app/feature/dish/dish_detail/view/recipe_detail_page.dart';
 import 'package:tastemate_app/feature/ingredient/view/category_detail_page.dart';
-import 'package:tastemate_app/feature/discovery/view/product_detail_page.dart';
 import 'package:tastemate_app/feature/home/views/home_page.dart';
 import 'package:tastemate_app/feature/ingredient/view/supplier_Ingredient_page.dart';
 import 'package:tastemate_app/feature/ingredient_detail/ingredient_detail_page.dart';
@@ -28,7 +27,6 @@ class Routes {
   static const discoveryPage = '/discoveryPage';
   static const profile = '/profile';
   static const orderPage = '/orderPage';
-  static const productDetail = '/productDetail';
   static const ingredientDetail = '/ingredientDetail';
   static const categoryDetail = '/categoryDetail';
   static const supplierDetail = '/supplierDetail';
@@ -49,8 +47,6 @@ class Routes {
             ModalRoute.of(context)!.settings.arguments as List<CartDetailsDTO>),
     discoveryPage: (context) => const DiscoveryPage(),
     userInfor: (context) => const UserInforPage(),
-    productDetail: (context) => ProductDetailPage(
-        productId: ModalRoute.of(context)!.settings.arguments as int),
     verifyOtp: (context) => VerifyOtpPage(
         email: ModalRoute.of(context)!.settings.arguments as String),
     categoryDetail: (context) => CategoryDetailPage(

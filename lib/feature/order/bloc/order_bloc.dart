@@ -33,7 +33,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         emit(OrderError("Không thể tạo đơn hàng"));
       }
     } catch (e) {
-      emit(OrderError(e.toString()));
+      emit(OrderError("Lỗi hệ thống hãy thử lại sau"));
     }
   }
 }

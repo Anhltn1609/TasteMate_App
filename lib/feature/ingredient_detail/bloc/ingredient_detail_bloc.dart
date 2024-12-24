@@ -27,7 +27,7 @@ class IngredientDetailBloc
             "No Ingredient found for category ID: ${event.ingredientId}."));
       }
     } catch (e) {
-      emit(IngredientFailure("Error loading category Ingredient: $e"));
+      emit(IngredientFailure("Lỗi hệ thống hãy thử lại sau"));
     }
   }
 }

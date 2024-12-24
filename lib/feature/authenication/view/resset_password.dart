@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tastemate_app/core/router/routers.dart';
+import 'package:tastemate_app/core/widgets/dialog_widget.dart';
 import 'package:tastemate_app/feature/authenication/bloc/auth_bloc.dart';
 import 'package:tastemate_app/feature/authenication/bloc/auth_event.dart';
 import 'package:tastemate_app/feature/authenication/bloc/auth_state.dart';
@@ -31,22 +32,36 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     }
 
     if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(widget.email)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Email không hợp lệ')),
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return CustomDialogWidget(
+            message: 'Email không hợp lệ',
+          );
+        },
       );
       return;
     }
 
-    if (password.length < 6) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Mật khẩu phải có ít nhất 6 ký tự')),
+    if (password.length < 8) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return const CustomDialogWidget(
+              message: 'Mật khẩu phải có ít nhất 8 ký tự');
+        },
       );
       return;
     }
 
     if (password != confirmPassword) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Xác nhận mật khẩu không khớp')),
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return const CustomDialogWidget(
+            message: 'Xác nhận mật khẩu không khớp',
+          );
+        },
       );
       return;
     }
@@ -74,14 +89,24 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
             );
           } else if (state is ResetPasswordSuccess) {
             Navigator.of(context).pop();
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Đặt lại mật khẩu thành công')),
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return const CustomDialogWidget(
+                  message: 'Đặt lại mật khẩu thành công',
+                );
+              },
             );
             Navigator.pushNamed(context, Routes.login);
           } else if (state is AuthFailure) {
             Navigator.of(context).pop();
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return CustomDialogWidget(
+                  message: state.message,
+                );
+              },
             );
           }
         },

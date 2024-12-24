@@ -25,7 +25,7 @@ class UserInforBloc extends Bloc<UserInforEvent, UserInforState> {
         emit(UserInforFailure("Failed to load user information."));
       }
     } catch (e) {
-      emit(UserInforFailure("Error: $e"));
+      emit(UserInforFailure("Lỗi hệ thống hãy thử lại sau"));
     }
   }
 
@@ -38,12 +38,12 @@ class UserInforBloc extends Bloc<UserInforEvent, UserInforState> {
       final updatedUser = await _apiService.changeProfile(event.userUpdateDTO);
       final address = await _apiService.updateAddress(event.address);
       if (address != null && updatedUser != null) {
-        emit(UserInforLoaded(updatedUser, address[0]));
+        emit(UserInforUpdateSuccess(updatedUser, address[0]));
       } else {
         emit(UserInforFailure("Failed to load user information."));
       }
     } catch (e) {
-      emit(UserInforFailure("Failed to update profile: $e"));
+      emit(UserInforFailure("Lỗi hệ thống hãy thử lại sau"));
     }
   }
 }
