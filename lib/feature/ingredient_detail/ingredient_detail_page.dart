@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tastemate_app/core/constants/app_configs.dart';
 import 'package:tastemate_app/core/constants/app_styles.dart';
+import 'package:tastemate_app/core/router/routers.dart';
+import 'package:tastemate_app/core/widgets/dialog_widget.dart';
+import 'package:tastemate_app/feature/cart/bloc/cart_bloc.dart';
+import 'package:tastemate_app/feature/cart/bloc/cart_event.dart';
 import 'package:tastemate_app/feature/ingredient_detail/bloc/ingredient_detail_bloc.dart';
 import 'package:tastemate_app/feature/ingredient_detail/bloc/ingredient_detail_event.dart';
 import 'package:tastemate_app/feature/ingredient_detail/bloc/ingredient_detail_state.dart';
@@ -16,11 +20,13 @@ class IngredientDetailPage extends StatefulWidget {
 }
 
 class _IngredientDetailPageState extends State<IngredientDetailPage> {
+  int quantity = 1;
   @override
   void initState() {
     super.initState();
-    final ingredientDetailBloc = context.read<IngredientDetailBloc>();
-    ingredientDetailBloc.add(LoadIngredientDetailEvent(widget.ingredientId));
+    context
+        .read<IngredientDetailBloc>()
+        .add(LoadIngredientDetailEvent(widget.ingredientId));
   }
 
   @override
@@ -54,67 +60,141 @@ class _IngredientDetailPageState extends State<IngredientDetailPage> {
                   children: [
                     // Image and Price
                     Center(
-                      child: Column(
-                        children: [
-                          Image.network(
-                            ingredient.image ?? AppConfigs.fakeUrl,
-                            height: 150,
-                            fit: BoxFit.cover,
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            "${ingredient.price} đ",
-                            style: const TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.red,
-                            ),
-                          ),
-                        ],
+                      child: Image.network(
+                        ingredient.image ?? AppConfigs.fakeUrl,
+                        height: 150,
+                        fit: BoxFit.cover,
                       ),
                     ),
                     const SizedBox(height: 16),
 
                     // Product Title
                     Text(
-                      ingredient.name ?? "Tên sản phẩm",
+                      ingredient.name,
                       style: const TextStyle(
                           fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 8),
+                    Text(
+                      "Giá : ${ingredient.price} đ",
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.red,
+                      ),
+                    ),
 
-                    // Product Details
                     Row(
-                      children: const [
-                        Icon(Icons.flag, color: Colors.grey),
-                        SizedBox(width: 8),
-                        Text("Xuất xứ: Việt Nam"),
+                      children: [
+                        const Icon(Icons.monitor_weight, color: Colors.grey),
+                        const SizedBox(width: 8),
+                        Text(
+                            "Khối lượng : ${ingredient.stockQuantity / 1000} ${ingredient.unit}"),
                       ],
                     ),
                     const SizedBox(height: 4),
-                    Row(
-                      children: const [
-                        Icon(Icons.store, color: Colors.grey),
-                        SizedBox(width: 8),
-                        Text("Thương hiệu: Rice Color"),
-                      ],
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, Routes.supplierDetail,
+                            arguments: {
+                              'id': ingredient.supplier,
+                              'name': 'name',
+                            });
+                      },
+                      child: const Row(
+                        children: [
+                          Icon(Icons.store, color: Colors.grey),
+                          SizedBox(width: 8),
+                          Text("Nhà cung cấp"),
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 16),
 
                     // Wishlist Button
+
                     Center(
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        child: const Text(
-                          "Thêm vào giỏ hàng",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppStyles.primaryColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              if (quantity > 1) {
+                                quantity--;
+                                setState(() {});
+                              }
+                            },
+                            child: const Text(
+                              "-",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 18),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              minimumSize: const Size(40, 40),
+                            ),
                           ),
-                        ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Text(
+                              "$quantity",
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          // Button tăng số lượng
+                          ElevatedButton(
+                            onPressed: () {
+                              quantity++;
+                              setState(() {});
+                            },
+                            child: const Text(
+                              "+",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 18),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              minimumSize: const Size(40, 40),
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          // Button thêm vào giỏ hàng
+                          ElevatedButton(
+                            onPressed: () {
+                              context.read<CartBloc>().add(
+                                  AddIngredientsToCartEvent(
+                                      ingredient.id, quantity));
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return CustomDialogWidget(
+                                    message:
+                                        "Thành công thêm ${ingredient.name} vào giỏ hàng",
+                                  );
+                                },
+                              );
+                            },
+                            child: const Text(
+                              "Thêm vào giỏ hàng",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppStyles.primaryColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(height: 16),

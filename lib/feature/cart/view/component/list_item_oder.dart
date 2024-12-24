@@ -1,130 +1,166 @@
 import 'package:flutter/material.dart';
-import 'package:tastemate_app/core/constants/app_configs.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tastemate_app/core/constants/app_styles.dart';
+import 'package:tastemate_app/core/router/routers.dart';
+import 'package:tastemate_app/feature/cart/bloc/cart_bloc.dart';
+import 'package:tastemate_app/feature/cart/bloc/cart_event.dart';
+import 'package:tastemate_app/feature/cart/model/cart_detail_dto.dart';
 
 class ListItemOrder extends StatelessWidget {
-  final List<Product> items = [
-    Product(
-      image: 'https://fakeurl.com/image1.jpg',
-      name: 'Sữa Chua Uống Lên Men Ít Đường',
-      price: 31000,
-      quantity: 1,
-      description: '5 chai x 65ml',
-    ),
-    Product(
-      image: 'https://fakeurl.com/image2.jpg',
-      name: 'Trứng Gà Sạch Tamagoya - Rice Color',
-      price: 45000,
-      quantity: 1,
-      description: 'Hộp 10 trứng',
-    ),
-    Product(
-      image: 'https://fakeurl.com/image3.jpg',
-      name: 'Táo Breeze - Tony Fruits',
-      price: 95000,
-      quantity: 1,
-      description: '800-900g',
-    ),
+  final List<CartDetailsDTO> cartDetails;
 
-    // Add more items here if needed
-  ];
-
-  ListItemOrder({super.key});
+  const ListItemOrder({required this.cartDetails, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    if (cartDetails.length == 0)
+      return SizedBox(
+        height: 400,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "Giỏ hàng của bạn đang trống ",
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 20,
+                color: AppStyles.primaryColor,
+              ),
+            ),
+            SizedBox(
+              height: 8,
+            ),
+            IconButton(
+              onPressed: () {
+                Navigator.pushNamed(context, Routes.home);
+              },
+              icon: Icon(
+                Icons.add_circle,
+                color: AppStyles.primaryColor,
+                size: 80,
+              ),
+            ),
+          ],
+        ),
+      );
     return Column(
-      children: items.map((product) {
-        return CartItem(
-          image: AppConfigs.fakeUrl,
-          name: product.name,
-          price: product.price,
-          quantity: product.quantity,
-          description: product.description,
-        );
-      }).toList(),
-    );
-  }
-}
-
-class CartItem extends StatelessWidget {
-  final String image;
-  final String name;
-  final int price;
-  final int quantity;
-  final String description;
-
-  const CartItem({
-    required this.image,
-    required this.name,
-    required this.price,
-    required this.quantity,
-    required this.description,
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Row(
-        children: [
-          Image.network(
-            image,
-            height: 60,
-            width: 60,
-            fit: BoxFit.cover,
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(name, style: const TextStyle(fontSize: 16)),
-                const SizedBox(height: 4),
-                Text(description, style: const TextStyle(color: Colors.grey)),
-                const SizedBox(height: 8),
-                Text(
-                  '${price}đ',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ],
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 16.0),
+          child: Text(
+            "Danh sách đơn hàng của bạn",
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+              fontSize: 20,
+              color: AppStyles.primaryColor,
             ),
           ),
-          Row(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.remove, color: Colors.green),
-                onPressed: () {
-                  // Todo: Chức năng giảm số lượng
-                },
+        ),
+        ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: cartDetails.length,
+          itemBuilder: (context, index) {
+            final cartDetail = cartDetails[index];
+
+            return Dismissible(
+              key: ValueKey(cartDetail.id),
+              direction: DismissDirection.endToStart,
+              onDismissed: (_) {
+                context.read<CartBloc>().add(RemoveIngredientsFromCartEvent(
+                    cartDetail.ingredient.id, cartDetail.quantity));
+              },
+              background: Container(
+                color: Colors.red,
+                alignment: Alignment.centerRight,
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: const Icon(Icons.delete, color: Colors.white),
               ),
-              Text(quantity.toString(), style: const TextStyle(fontSize: 16)),
-              IconButton(
-                icon: const Icon(Icons.add, color: Colors.green),
-                onPressed: () {
-                  // Todo: Chức năng tăng số lượng
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, Routes.ingredientDetail,
+                      arguments: cartDetail.ingredient.id);
                 },
+                child: Card(
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Row(
+                      children: [
+                        // Image of the item
+                        Image.network(
+                          cartDetail.ingredient.image,
+                          height: 80,
+                          width: 80,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Icon(
+                            Icons.image_not_supported,
+                            size: 60,
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        // Item name and quantity
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                cartDetail.ingredient.name,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 16),
+                              ),
+                              Text('x${cartDetail.quantity}'),
+                            ],
+                          ),
+                        ),
+                        // Quantity controls
+                        Row(
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                if (cartDetail.quantity > 1) {
+                                  context.read<CartBloc>().add(
+                                      RemoveIngredientFromCartEvent(
+                                          cartDetail.ingredient.id));
+                                }
+                              },
+                              icon: const Icon(Icons.remove_circle_outline,
+                                  color: Colors.red),
+                            ),
+                            Text(
+                              '${cartDetail.quantity}',
+                              style: const TextStyle(fontSize: 16),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                context.read<CartBloc>().add(
+                                    AddIngredientToCartEvent(
+                                        cartDetail.ingredient.id));
+                              },
+                              icon: const Icon(Icons.add_circle_outline,
+                                  color: Colors.green),
+                            ),
+                          ],
+                        ),
+                        Text(
+                          '${cartDetail.subtotal}đ',
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black54),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
-            ],
-          ),
-        ],
-      ),
+            );
+          },
+        ),
+      ],
     );
   }
-}
-
-class Product {
-  final String image;
-  final String name;
-  final int price;
-  final int quantity;
-  final String description;
-
-  Product({
-    required this.image,
-    required this.name,
-    required this.price,
-    required this.quantity,
-    required this.description,
-  });
 }

@@ -1,3 +1,5 @@
+import 'package:tastemate_app/core/constants/app_configs.dart';
+
 class IngredientDTO {
   final String id;
   final String name;
@@ -35,8 +37,8 @@ class IngredientDTO {
       id: json['_id'] as String,
       name: json['name'] as String,
       nutritionalValue: json['nutritionalValue'] as int,
-      description: json['description'] as String,
-      image: json['image'] as String,
+      description: (json['description'] as String?) ?? "",
+      image: (json['image'] as String?) ?? AppConfigs.fakeUrl,
       unit: json['unit'] as String,
       price: json['price'] as int,
       stockQuantity: json['stockQuantity'] as int,
@@ -67,7 +69,6 @@ class IngredientDTO {
     };
   }
 
-  // Static method to create a list of IngredientDTO from a list of JSON objects
   static List<IngredientDTO> listFromJson(List<dynamic> jsonList) {
     return jsonList
         .map((json) => IngredientDTO.fromJson(json as Map<String, dynamic>))

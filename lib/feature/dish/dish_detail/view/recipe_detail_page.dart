@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tastemate_app/core/constants/app_configs.dart';
 import 'package:tastemate_app/core/constants/app_styles.dart';
+import 'package:tastemate_app/core/router/routers.dart';
 import 'package:tastemate_app/core/services/api/api_services.dart';
 import 'package:tastemate_app/feature/dish/dish_detail/bloc/dish_detail_bloc.dart';
 import 'package:tastemate_app/feature/dish/dish_detail/bloc/dish_detail_event.dart';
@@ -104,9 +105,7 @@ class DishDetailView extends StatelessWidget {
             textAlign: TextAlign.justify,
           ),
           const SizedBox(height: 16.0),
-
-          // Ingredients Section
-          Text(
+          const Text(
             "Ingredients:",
             style: const TextStyle(
                 fontSize: 24,
@@ -114,7 +113,13 @@ class DishDetailView extends StatelessWidget {
                 fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8.0),
-          ...dish.quantityDTO.map((quantityDTO) => ListTile(
+          ...dish.quantityDTO.map(
+            (quantityDTO) => GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, Routes.ingredientDetail,
+                    arguments: quantityDTO.ingredient.id);
+              },
+              child: ListTile(
                 leading: ClipRRect(
                   borderRadius: BorderRadius.circular(8.0),
                   child: Image.network(
@@ -126,7 +131,7 @@ class DishDetailView extends StatelessWidget {
                 ),
                 title: Text(
                   quantityDTO.ingredient.name,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,
                     color: Colors.black87,
@@ -134,7 +139,9 @@ class DishDetailView extends StatelessWidget {
                 ),
                 subtitle: Text(
                     "Số lượng : ${quantityDTO.quantity} ${quantityDTO.ingredient.unit} \nGiá trị dinh dưỡng: ${quantityDTO.ingredient.nutritionalValue} kcal"),
-              )),
+              ),
+            ),
+          ),
         ],
       ),
     );

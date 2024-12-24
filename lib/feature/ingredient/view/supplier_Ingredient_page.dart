@@ -11,20 +11,33 @@ class SupplierIngredientPage extends StatefulWidget {
   final String supplierId;
   final String title;
 
-  const SupplierIngredientPage(
-      {super.key, required this.supplierId, required this.title});
+  const SupplierIngredientPage({
+    super.key,
+    required this.supplierId,
+    required this.title,
+  });
 
   @override
-  _SupplierDetailPageState createState() => _SupplierDetailPageState();
+  _SupplierIngredientPageState createState() => _SupplierIngredientPageState();
 }
 
-class _SupplierDetailPageState extends State<SupplierIngredientPage> {
+class _SupplierIngredientPageState extends State<SupplierIngredientPage> {
+  late List<IngredientDTO> filteredIngredients = [];
+  late List<IngredientDTO> allIngredients = [];
+  final TextEditingController searchController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
     context
         .read<IngredientBloc>()
         .add(LoadSupplierIngredientEvent(widget.supplierId));
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -63,9 +76,66 @@ class _SupplierDetailPageState extends State<SupplierIngredientPage> {
             if (state is IngredientLoading) {
               return const Center(child: CircularProgressIndicator());
             } else if (state is CategoryDetailLoaded) {
-              return CategoryListWidget(
-                title: "Nguyên liệu",
-                ingredients: state.ingredients,
+              allIngredients = state.ingredients;
+              filteredIngredients = filteredIngredients.isEmpty
+                  ? allIngredients
+                  : filteredIngredients;
+
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextField(
+                      onChanged: (value) {
+                        final query = searchController.text.toLowerCase();
+                        setState(() {
+                          filteredIngredients = allIngredients
+                              .where((ingredient) =>
+                                  ingredient.name.toLowerCase().contains(query))
+                              .toList();
+                          print("filteredIngredients : $filteredIngredients");
+                        });
+                      },
+                      controller: searchController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.search),
+                        hintText: searchController.text,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Expanded(
+                      child: filteredIngredients.isEmpty
+                          ? Center(
+                              child: Text(
+                                "No ingredients found.",
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            )
+                          : GridView.builder(
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 8,
+                                mainAxisSpacing: 8,
+                                childAspectRatio: 0.8,
+                              ),
+                              itemCount: filteredIngredients.length,
+                              itemBuilder: (context, index) {
+                                return IngredientCard(
+                                  ingredient: filteredIngredients[index],
+                                );
+                              },
+                            ),
+                    ),
+                  ],
+                ),
               );
             } else if (state is IngredientFailure) {
               return Center(
@@ -84,48 +154,6 @@ class _SupplierDetailPageState extends State<SupplierIngredientPage> {
             }
           },
         ),
-      ),
-    );
-  }
-}
-
-class CategoryListWidget extends StatelessWidget {
-  final List<IngredientDTO> ingredients;
-  final String title;
-
-  const CategoryListWidget({
-    super.key,
-    required this.ingredients,
-    required this.title,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: AppStyles.textBold,
-          ),
-          const SizedBox(height: 16),
-          Expanded(
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 8,
-                mainAxisSpacing: 8,
-                childAspectRatio: 0.8,
-              ),
-              itemCount: ingredients.length,
-              itemBuilder: (context, index) {
-                return IngredientCard(ingredient: ingredients[index]);
-              },
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -171,7 +199,6 @@ class IngredientCard extends StatelessWidget {
               ingredient.name,
               style: TextStyle(fontSize: 14),
             ),
-            // const Spacer(),
             TextButton(
               onPressed: () {
                 // Handle add to cart
@@ -186,7 +213,7 @@ class IngredientCard extends StatelessWidget {
                 ),
               ),
               child: Text(
-                "+ Add to cart",
+                "Add to cart",
                 style: TextStyle(color: AppStyles.primaryColor),
               ),
             ),

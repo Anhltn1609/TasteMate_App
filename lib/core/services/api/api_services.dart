@@ -8,11 +8,14 @@ import 'package:tastemate_app/feature/authenication/model/authentication_dto.dar
 import 'package:tastemate_app/feature/authenication/model/user_create_dto.dart';
 import 'package:tastemate_app/feature/authenication/model/user_dto.dart';
 import 'package:tastemate_app/feature/authenication/model/verify_otp_dto.dart';
+import 'package:tastemate_app/feature/cart/model/cart_dto.dart';
 import 'package:tastemate_app/feature/discovery/model/category_dto.dart';
 import 'package:tastemate_app/feature/discovery/model/ingredient_dto.dart';
 import 'package:tastemate_app/feature/discovery/model/supplier_dto.dart';
 import 'package:tastemate_app/feature/dish/model/dish_dto.dart';
 import 'package:tastemate_app/feature/dish/dish_detail/model/dish_recipe_dto.dart';
+import 'package:tastemate_app/feature/order/model/order_dto.dart';
+import 'package:tastemate_app/feature/order/model/order_history_dto.dart';
 import 'package:tastemate_app/feature/profile/model/address_dto.dart';
 import 'package:tastemate_app/feature/profile/model/user_update_dto.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
@@ -600,5 +603,194 @@ class ApiService {
       rethrow;
     }
     return null;
+  }
+
+  Future<CartDTO?> getCart() async {
+    try {
+      var headers = {'Authorization': 'Bearer $accessToken'};
+      var response = await _dio.request(
+        '$baseUrl/api/v1/carts/me',
+        options: Options(
+          method: 'GET',
+          headers: headers,
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        print(json.encode(response.data));
+        final responseData = response.data as Map<String, dynamic>;
+        if (responseData['data'] != null) {
+          final CartDTO cartDTO =
+              CartDTO.fromJson(responseData['data']['cart']);
+          return cartDTO;
+        }
+      } else {
+        return null;
+      }
+    } on DioException catch (e) {
+      rethrow;
+    }
+    return null;
+  }
+
+  Future<bool> addIngredientToCart(String ingredientId) async {
+    try {
+      var headers = {'Authorization': 'Bearer $accessToken'};
+      var data = json.encode({"ingredientId": "$ingredientId", "quantity": 1});
+      var response = await _dio.request(
+        '$baseUrl/api/v1/carts/add-ingredient',
+        options: Options(
+          method: 'PUT',
+          headers: headers,
+        ),
+        data: data,
+      );
+      if (response.statusCode == 200) {
+        print(json.encode(response.data));
+        return true;
+      }
+      return false;
+    } on DioException catch (e) {
+      // return false;
+      rethrow;
+    }
+  }
+
+  Future<bool> addIngredientsToCart(String ingredientId, int quantity) async {
+    try {
+      var headers = {'Authorization': 'Bearer $accessToken'};
+      var data =
+          json.encode({"ingredientId": "$ingredientId", "quantity": quantity});
+      var response = await _dio.request(
+        '$baseUrl/api/v1/carts/add-ingredient',
+        options: Options(
+          method: 'PUT',
+          headers: headers,
+        ),
+        data: data,
+      );
+      if (response.statusCode == 200) {
+        print(json.encode(response.data));
+        return true;
+      }
+      return false;
+    } on DioException catch (e) {
+      // return false;
+      rethrow;
+    }
+  }
+
+  Future<bool> removeIngredientFromCart(String ingredientId) async {
+    try {
+      var headers = {'Authorization': 'Bearer $accessToken'};
+      var data = json.encode({"ingredientId": "$ingredientId", "quantity": 1});
+      var response = await _dio.request(
+        '$baseUrl/api/v1/carts/remove-ingredient',
+        options: Options(
+          method: 'PUT',
+          headers: headers,
+        ),
+        data: data,
+      );
+      if (response.statusCode == 200) {
+        print(json.encode(response.data));
+        return true;
+      }
+      return false;
+    } on DioException catch (e) {
+      // return false;
+      rethrow;
+    }
+  }
+
+  Future<bool> removeIngredientsFromCart(
+      String ingredientId, int quantity) async {
+    try {
+      var headers = {'Authorization': 'Bearer $accessToken'};
+      var data =
+          json.encode({"ingredientId": "$ingredientId", "quantity": quantity});
+      var response = await _dio.request(
+        '$baseUrl/api/v1/carts/remove-ingredient',
+        options: Options(
+          method: 'PUT',
+          headers: headers,
+        ),
+        data: data,
+      );
+      if (response.statusCode == 200) {
+        print(json.encode(response.data));
+        return true;
+      }
+      return false;
+    } on DioException catch (e) {
+      // return false;
+      rethrow;
+    }
+  }
+
+  Future<bool> createOrder(OrderDTO order) async {
+    try {
+      var headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken'
+      };
+      var data = json.encode(order);
+      print("Data: $data");
+      var dio = Dio();
+      var response = await dio.request(
+        '$baseUrl/api/v1/orders',
+        options: Options(
+          method: 'POST',
+          headers: headers,
+        ),
+        data: data,
+      );
+
+      if (response.statusCode == 201) {
+        print(json.encode(response.data));
+        return true;
+      } else {
+        print(response.statusMessage);
+        return false;
+      }
+    } on DioException catch (e) {
+      // return false;
+      rethrow;
+    }
+  }
+
+  //Todo đợi sửa api
+  Future<List<OrderHistoryDTO>?> getAllOrders() async {
+    try {
+      var data = '''''';
+      var headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken'
+      };
+      var response = await _dio.request(
+        '$baseUrl/api/v1/orders/me?limit=10&page=1',
+        options: Options(
+          method: 'GET',
+          headers: headers,
+        ),
+        data: data,
+      );
+
+      if (response.statusCode == 200) {
+        print(json.encode(response.data));
+        final responseData = response.data as Map<String, dynamic>;
+        if (responseData['data'] != null) {
+          final List<OrderHistoryDTO> orderHistoryDTO =
+              OrderHistoryDTO.listFromJson(responseData['data']['orders']);
+          return orderHistoryDTO;
+        } else {
+          print(response.statusMessage);
+          return null;
+        }
+      }
+    } on DioException catch (e) {
+      // return false;
+      rethrow;
+    }
   }
 }

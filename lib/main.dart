@@ -4,11 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tastemate_app/app.dart';
 import 'package:tastemate_app/core/services/api/api_services.dart';
 import 'package:tastemate_app/feature/authenication/bloc/auth_bloc.dart';
+import 'package:tastemate_app/feature/cart/bloc/cart_bloc.dart';
 import 'package:tastemate_app/feature/discovery/bloc/discovery_bloc.dart';
 import 'package:tastemate_app/feature/dish/bloc/dish_bloc.dart';
 import 'package:tastemate_app/feature/dish/dish_detail/bloc/dish_detail_bloc.dart';
 import 'package:tastemate_app/feature/ingredient/bloc/ingredient_bloc.dart';
 import 'package:tastemate_app/feature/ingredient_detail/bloc/ingredient_detail_bloc.dart';
+import 'package:tastemate_app/feature/order/bloc/order_bloc.dart';
 import 'package:tastemate_app/feature/profile/bloc/profile_bloc.dart';
 
 void main() {
@@ -37,6 +39,12 @@ void main() {
         ),
         BlocProvider<IngredientDetailBloc>(
           create: (context) => IngredientDetailBloc(ApiService()),
+        ),
+        BlocProvider<CartBloc>(
+          create: (context) => CartBloc(ApiService()),
+        ),
+        BlocProvider<OrderBloc>(
+          create: (context) => OrderBloc(ApiService()),
         ),
       ],
       child: const ProviderScope(

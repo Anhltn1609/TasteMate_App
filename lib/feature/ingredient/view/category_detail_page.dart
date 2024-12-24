@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tastemate_app/core/constants/app_styles.dart';
 import 'package:tastemate_app/core/router/routers.dart';
+import 'package:tastemate_app/core/widgets/dialog_widget.dart';
+import 'package:tastemate_app/feature/cart/bloc/cart_bloc.dart';
+import 'package:tastemate_app/feature/cart/bloc/cart_event.dart';
 import 'package:tastemate_app/feature/discovery/model/ingredient_dto.dart';
 import 'package:tastemate_app/feature/ingredient/bloc/ingredient_bloc.dart';
 import 'package:tastemate_app/feature/ingredient/bloc/ingredient_event.dart';
@@ -17,12 +20,22 @@ class CategoryDetailPage extends StatefulWidget {
 }
 
 class _CategoryDetailPageState extends State<CategoryDetailPage> {
+  late List<IngredientDTO> filteredIngredients = [];
+  late List<IngredientDTO> allIngredients = [];
+  final TextEditingController searchController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
     context
         .read<IngredientBloc>()
         .add(LoadCategoryDetailEvent(widget.categoryId));
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -61,9 +74,66 @@ class _CategoryDetailPageState extends State<CategoryDetailPage> {
             if (state is IngredientLoading) {
               return const Center(child: CircularProgressIndicator());
             } else if (state is CategoryDetailLoaded) {
-              return CategoryListWidget(
-                title: "Ingredients",
-                ingredients: state.ingredients,
+              allIngredients = state.ingredients;
+              filteredIngredients = filteredIngredients.isEmpty
+                  ? allIngredients
+                  : filteredIngredients;
+
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // SearchBar
+                    TextField(
+                      onChanged: (value) {
+                        final query = searchController.text.toLowerCase();
+                        setState(() {
+                          filteredIngredients = allIngredients
+                              .where((ingredient) =>
+                                  ingredient.name.toLowerCase().contains(query))
+                              .toList();
+                        });
+                      },
+                      controller: searchController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.search),
+                        hintText: "Search ingredients...",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Expanded(
+                      child: filteredIngredients.isEmpty
+                          ? Center(
+                              child: Text(
+                                "No ingredients found.",
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            )
+                          : GridView.builder(
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 8,
+                                mainAxisSpacing: 8,
+                                childAspectRatio: 0.8,
+                              ),
+                              itemCount: filteredIngredients.length,
+                              itemBuilder: (context, index) {
+                                return IngredientCard(
+                                  ingredient: filteredIngredients[index],
+                                );
+                              },
+                            ),
+                    ),
+                  ],
+                ),
               );
             } else if (state is IngredientFailure) {
               return Center(
@@ -172,7 +242,18 @@ class IngredientCard extends StatelessWidget {
             // const Spacer(),
             TextButton(
               onPressed: () {
-                // Handle add to cart
+                context
+                    .read<CartBloc>()
+                    .add(AddIngredientToCartEvent(ingredient.id));
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return CustomDialogWidget(
+                      message:
+                          "Thêm ${ingredient.name} vào giỏ hàng thành công",
+                    );
+                  },
+                );
               },
               style: TextButton.styleFrom(
                 shape: RoundedRectangleBorder(
