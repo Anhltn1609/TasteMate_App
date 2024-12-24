@@ -18,10 +18,9 @@ class RecipesPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: Text(
+        title: const Text(
           'Recipes',
-          style:
-              const TextStyle(color: Colors.green, fontWeight: FontWeight.w600),
+          style: TextStyle(color: Colors.green, fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
       ),
@@ -36,8 +35,16 @@ class RecipesPage extends StatelessWidget {
   }
 }
 
-class DishListView extends StatelessWidget {
+class DishListView extends StatefulWidget {
   const DishListView({super.key});
+
+  @override
+  _DishListViewState createState() => _DishListViewState();
+}
+
+class _DishListViewState extends State<DishListView> {
+  String searchQuery = ""; // State to store search query
+  late List<DishDTO> filteredDishes = []; // Filtered dishes based on search
 
   @override
   Widget build(BuildContext context) {
@@ -46,23 +53,37 @@ class DishListView extends StatelessWidget {
         if (state is RecipeLoading) {
           return const Center(child: CircularProgressIndicator());
         } else if (state is RecipeLoaded) {
-          final dishes = state.dishes;
+          final allDishes = state.dishes;
+          filteredDishes = searchQuery.isEmpty
+              ? allDishes
+              : allDishes
+                  .where((dish) => dish.name
+                      .toLowerCase()
+                      .contains(searchQuery.toLowerCase()))
+                  .toList();
+
           return ListView(
             children: [
-              const SearchBar(),
+              SearchBar(
+                onSearch: (query) {
+                  setState(() {
+                    searchQuery = query;
+                  });
+                },
+              ),
               DishGrid(
                 title: 'Hot Dishes',
-                dishes: dishes,
+                dishes: filteredDishes,
                 childAspectRatio: 0.9,
               ),
               DishGrid(
                 title: 'Morning',
-                dishes: dishes,
+                dishes: filteredDishes,
                 childAspectRatio: 1.35,
               ),
               DishGrid(
                 title: 'Lunch',
-                dishes: dishes,
+                dishes: filteredDishes,
                 childAspectRatio: 1.35,
               ),
             ],
@@ -70,7 +91,7 @@ class DishListView extends StatelessWidget {
         } else if (state is RecipeError) {
           return Center(child: Text(state.message));
         } else {
-          return Center(child: Text("No data available"));
+          return const Center(child: Text("No data available"));
         }
       },
     );
@@ -78,7 +99,9 @@ class DishListView extends StatelessWidget {
 }
 
 class SearchBar extends StatelessWidget {
-  const SearchBar({super.key});
+  final ValueChanged<String> onSearch;
+
+  const SearchBar({super.key, required this.onSearch});
 
   @override
   Widget build(BuildContext context) {
@@ -86,6 +109,7 @@ class SearchBar extends StatelessWidget {
       children: [
         Expanded(
           child: TextField(
+            onChanged: onSearch, // Send search query on input change
             decoration: InputDecoration(
               hintText: translation(context).find_recipes,
               prefixIcon: const Icon(Icons.search),
@@ -212,7 +236,7 @@ class SectionTitle extends StatelessWidget {
           const Spacer(),
           GestureDetector(
             onTap: () {
-              //Todo : Navigate to SectionDetail
+              // TODO: Navigate to SectionDetail
             },
             child: Text(
               translation(context).see_all,
