@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tastemate_app/core/constants/app_styles.dart';
+import 'package:tastemate_app/core/constants/language_constants.dart';
 import 'package:tastemate_app/feature/dashboard/view/Ingredient_list.dart';
 import 'package:tastemate_app/feature/dashboard/view/Recommended_dish.dart';
 import 'package:tastemate_app/feature/dashboard/view/banner_carousel.dart';
@@ -46,7 +47,7 @@ class _DashboardPageState extends State<DashboardPage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
-                'Nutrition Summary History',
+                translation(context).nutrition_summary_history,
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ),

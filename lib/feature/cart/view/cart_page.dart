@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tastemate_app/core/constants/app_configs.dart';
+import 'package:tastemate_app/core/constants/language_constants.dart';
 import 'package:tastemate_app/core/router/routers.dart';
 import 'package:tastemate_app/core/services/api/api_services.dart';
 import 'package:tastemate_app/core/widgets/dialog_widget.dart';
@@ -154,7 +155,7 @@ class _CartDetailSelectionSheetState extends State<CartDetailSelectionSheet> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            "Chọn các sản phẩm bạn muốn đặt hàng",
+            translation(context).select_products_to_order,
             style: TextStyle(
               fontWeight: FontWeight.w700,
               fontSize: 18,

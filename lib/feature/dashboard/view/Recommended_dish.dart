@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tastemate_app/core/constants/app_configs.dart';
+import 'package:tastemate_app/core/constants/language_constants.dart';
 import 'package:tastemate_app/core/router/routers.dart';
 import 'package:tastemate_app/feature/dish/bloc/dish_bloc.dart';
 import 'package:tastemate_app/feature/dish/bloc/dish_state.dart';
@@ -20,11 +21,12 @@ class RecommendedMealSection extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
-                  'Recommended Meal Plans',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  translation(context).recommended_meal_plans,
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Container(
                 height: 146,
                 child: ListView(

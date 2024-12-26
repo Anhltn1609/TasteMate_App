@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tastemate_app/core/constants/language_constants.dart';
 import 'package:tastemate_app/core/router/routers.dart';
 import 'package:tastemate_app/feature/discovery/bloc/discovery_bloc.dart';
 import 'package:tastemate_app/feature/discovery/bloc/discovery_state.dart';
@@ -19,12 +20,13 @@ class IngrdientSection extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
-                  'Danh sách nguyên liệu yêu thích',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  translation(context).list_favorite_ingredient,
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
-              SizedBox(height: 8),
-              Container(
+              const SizedBox(height: 8),
+              SizedBox(
                 height: 146,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
@@ -40,7 +42,7 @@ class IngrdientSection extends StatelessWidget {
             child: Text('Error: ${state.message}'),
           );
         } else {
-          return Center(child: Text('No data available'));
+          return const Center(child: Text('No data available'));
         }
       },
     );

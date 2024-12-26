@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tastemate_app/core/constants/language_constants.dart';
 import 'package:tastemate_app/feature/nutrition_history/bloc/nutrition_bloc.dart';
 import 'package:tastemate_app/feature/nutrition_history/bloc/nutrition_state.dart';
 
@@ -18,9 +19,9 @@ class NutritionSummaryWidget extends StatelessWidget {
               : null;
 
           if (todayNutrition == null) {
-            return const Center(
+            return Center(
               child: Text(
-                'Không có dữ liệu dinh dưỡng hôm nay.',
+                translation(context).no_nutrition_data_today,
                 style: TextStyle(fontSize: 16, color: Colors.grey),
               ),
             );
